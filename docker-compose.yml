@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: hospedaje_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # Exponemos el puerto solo de forma local en el VPS por seguridad
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        DATABASE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+        PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+    container_name: hospedaje_web
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      # La URL de conexión usa el nombre del contenedor de la base de datos ('db')
+      DATABASE_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+    # Aquí irán luego las variables de Cloudflare R2
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+    name: hospedaje_db_data
+
+networks:
+  app_network:
+    name: hospedaje_network
+    driver: bridge
