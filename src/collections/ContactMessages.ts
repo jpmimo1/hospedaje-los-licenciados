@@ -6,14 +6,14 @@ export const ContactMessages: CollectionConfig = {
   admin: {
     useAsTitle: "email",
     defaultColumns: ["name", "email", "status", "createdAt"],
-    // Nota de Arquitectura: 
-    // Esta colección NO lleva la propiedad 'localized: true' en ningún campo
-    // porque almacena datos enviados por los usuarios (inbox), no contenido de la página web.
+    // Architectural Note:
+    // This collection DOES NOT use 'localized: true' on any field
+    // because it stores data submitted by end-users (inbox), not translatable website content.
   },
   access: {
-    read: ({ req: { user } }) => !!user, 
-    create: () => true, 
-    update: ({ req: { user } }) => !!user, 
+    read: ({ req: { user } }) => !!user,
+    create: () => true,
+    update: ({ req: { user } }) => !!user,
     delete: ({ req: { user } }) => !!user,
   },
   fields: [
@@ -30,7 +30,7 @@ export const ContactMessages: CollectionConfig = {
       label: "Correo Electrónico",
     },
     {
-      type: "row", 
+      type: "row",
       fields: [
         {
           name: "estimatedCheckIn",
@@ -85,5 +85,5 @@ export const ContactMessages: CollectionConfig = {
       ],
     },
   ],
-  timestamps: true, 
+  timestamps: true,
 };
