@@ -4,7 +4,7 @@ import { useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { X, ChevronLeft, ImageIcon } from "lucide-react";
-import { Button } from "@/components/ui/button"; // Asumiendo que usas shadcn
+import { Button } from "@/components/ui/button";
 import { Media } from "@/payload-types";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -23,7 +23,7 @@ export function RoomGallery({ images, roomName }: RoomGalleryProps) {
     router.back();
   }, [router]);
 
-  // 2. Bloqueo de Scroll y Tecla ESC
+  // Scroll lock and ESC key event listener
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -32,6 +32,7 @@ export function RoomGallery({ images, roomName }: RoomGalleryProps) {
         if (e.key === "Escape") closeGallery();
       };
       window.addEventListener("keydown", handleEsc);
+
       return () => {
         document.body.style.overflow = "unset";
         window.removeEventListener("keydown", handleEsc);
@@ -43,14 +44,13 @@ export function RoomGallery({ images, roomName }: RoomGalleryProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          /* Animación del contenedor principal */
           initial={{ opacity: 0, y: "100%" }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: "100%" }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
           className="fixed inset-0 z-100 bg-background flex flex-col overflow-y-auto"
         >
-          {/* HEADER FIJO */}
+          {/* Sticky Header */}
           <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 h-16 shrink-0 flex items-center justify-between">
             <Button
               variant="ghost"
@@ -76,12 +76,11 @@ export function RoomGallery({ images, roomName }: RoomGalleryProps) {
             </Button>
           </header>
 
-          {/* FEED DE IMÁGENES VERTICAL */}
+          {/* Vertical Image Feed */}
           <div className="container max-w-4xl mx-auto py-8 px-4 flex flex-col gap-6">
             {images.map((item, index) => (
               <motion.div
                 key={index}
-                /* Animación de cascada para las imágenes */
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05 + 0.2 }}
@@ -99,7 +98,7 @@ export function RoomGallery({ images, roomName }: RoomGalleryProps) {
             ))}
           </div>
 
-          {/* FOOTER DE LA GALERÍA (Opcional) */}
+          {/* Gallery Footer */}
           <div className="py-10 md:py-15 text-center flex flex-col items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <ImageIcon className="w-6 h-6 text-primary" />

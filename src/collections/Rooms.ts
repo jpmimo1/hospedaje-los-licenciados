@@ -11,7 +11,7 @@ export const Rooms: CollectionConfig = {
       name: "name",
       type: "text",
       required: true,
-      localized: true, // <-- AÑADIDO: Nombre de la habitación en ES y EN
+      localized: true,
       label: "Nombre de la Habitación",
     },
     {
@@ -21,7 +21,7 @@ export const Rooms: CollectionConfig = {
       unique: true,
       index: true,
       label: "Identificador de URL (Slug)",
-      // No localizado: Mantiene la misma URL limpia para evitar conflictos de enrutamiento
+      // Not localized: Maintains a clean, singular URL structure to prevent routing conflicts in Next.js
       admin: {
         position: "sidebar",
         description:
@@ -32,14 +32,14 @@ export const Rooms: CollectionConfig = {
       name: "description",
       type: "richText",
       editor: lexicalEditor({}),
-      localized: true, // <-- AÑADIDO: El detalle extendido de lo que incluye la habitación
+      localized: true,
       label: "Descripción Detallada",
     },
     {
       name: "shortDescription",
       type: "textarea",
       required: false,
-      localized: true, // <-- AÑADIDO: El breve resumen que va en las tarjetas del catálogo
+      localized: true,
       label: "Descripción Corta (Resumen)",
       maxLength: 150,
       admin: {
@@ -51,13 +51,13 @@ export const Rooms: CollectionConfig = {
       name: "price",
       type: "number",
       required: true,
-      // No localizado: El valor numérico del precio se mantiene igual
+      // Not localized: Numeric financial value remains universal
       label: "Precio por Noche (S/)",
     },
     {
       name: "capacity",
       type: "number",
-      // No localizado: La capacidad de personas es universal
+      // Not localized: Human guest capacity is universal
       label: "Capacidad Máxima",
     },
     {
@@ -98,7 +98,6 @@ export const Rooms: CollectionConfig = {
       name: "featured",
       type: "checkbox",
       defaultValue: false,
-      // No localizado
       label: "Destacar en Inicio",
       admin: {
         description:
@@ -110,7 +109,7 @@ export const Rooms: CollectionConfig = {
       type: "relationship",
       relationTo: "amenities",
       hasMany: true,
-      // No localizado: Mapea a la misma colección de servicios
+      // Not localized: Maps directly to the shared, central amenities collection
       label: "Comodidades de la Habitación",
       admin: {
         description:
@@ -121,7 +120,7 @@ export const Rooms: CollectionConfig = {
       name: "gallery",
       type: "array",
       label: "Galería de Fotos",
-      // No localizado: Las imágenes adjuntas sirven para ambos idiomas
+      // Not localized: Attached assets are structurally reused across all language versions
       labels: {
         singular: "Foto",
         plural: "Fotos",

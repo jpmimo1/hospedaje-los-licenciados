@@ -8,7 +8,6 @@ import { LocalLink } from "@/components/LocaleLink";
 import { RoomCard } from "@/components/RoomCard";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 
-// 1. Diccionario de traducciones para los textos estáticos ("quemados")
 const dictionary = {
   es: {
     heroButton: "Ver Habitaciones",
@@ -49,7 +48,6 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
 
-  // 2. Extraemos las traducciones correspondientes al idioma actual
   const t = dictionary[locale as "es" | "en"] || dictionary.es;
 
   const payload = await getPayload({ config: configPromise });
@@ -80,6 +78,7 @@ export default async function HomePage({
     <div className="flex flex-col min-h-screen">
       {/* ================= HERO SECTION ================= */}
       <section className="relative h-[80vh] min-h-150 flex items-center justify-center">
+        <div id="home" className="absolute -top-18.75" />
         {siteContent.heroImage && typeof siteContent.heroImage === "object" && (
           <Image
             src={siteContent.heroImage.url || ""}
@@ -100,7 +99,6 @@ export default async function HomePage({
             {siteContent.heroSubtitle}
           </p>
 
-          {/* Usamos LocalLink para el botón del Hero */}
           <LocalLink
             href="#rooms"
             className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg font-medium transition-colors"
@@ -111,7 +109,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ================= SERVICIOS GENERALES ================= */}
+      {/* ================= GENERAL AMENITIES ================= */}
       {siteContent.generalAmenities &&
         siteContent.generalAmenities.length > 0 && (
           <section className="py-16 bg-muted/30 dark:bg-muted/10 border-y border-border/50">
@@ -151,7 +149,7 @@ export default async function HomePage({
           </section>
         )}
 
-      {/* ================= SECCIÓN HABITACIONES ================= */}
+      {/* ================= ROOMS SECTION ================= */}
       <section className="py-18.75 bg-muted relative border-b border-border/50">
         <div id="rooms" className="absolute -top-18.75" />
         <div className="container mx-auto px-4">
@@ -172,15 +170,13 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ================= SECCIÓN NOSOTROS ================= */}
+      {/* ================= ABOUT SECTION ================= */}
       <section className="py-24 bg-muted/30 relative">
-        {/* Ancla para navegación */}
         <div id="about" className="absolute -top-18.75" />
 
-        {/* Limitamos el ancho a max-w-6xl para que coincida con la elegancia de las otras páginas */}
+        {/* Constrain width to max-w-6xl to match layout consistency across pages */}
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-            {/* LADO IZQUIERDO: Imagen con marco decorativo y hover inmersivo */}
             <div className="w-full lg:w-1/2 relative group">
               <div className="relative h-75 md:h-112.5 rounded-2xl overflow-hidden shadow-lg">
                 {siteContent.aboutImage &&
@@ -198,11 +194,9 @@ export default async function HomePage({
               </div>
             </div>
 
-            {/* LADO DERECHO: Contenido y Botón */}
             <div className="w-full lg:w-1/2">
-              {/* Eyebrow text (Texto de ceja para dar contexto) */}
               <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 block">
-                Sobre Nosotros
+                About Us
               </span>
 
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6 leading-tight">
@@ -217,7 +211,6 @@ export default async function HomePage({
                 )}
               </div>
 
-              {/* Botón de historia completa (Estilo Outline Animado) */}
               <LocalLink
                 href="/about"
                 className="inline-flex items-center justify-center px-5 py-2 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-primary-foreground dark:hover:text-background transition-all duration-300 gap-2 group"

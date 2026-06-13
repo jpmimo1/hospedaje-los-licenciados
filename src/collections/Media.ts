@@ -1,8 +1,8 @@
-import { CollectionConfig } from "payload";
+import type { CollectionConfig } from "payload";
 
 export const Media: CollectionConfig = {
   slug: "media",
-  upload: true, // Habilita la carga de archivos
+  upload: true,
   access: {
     read: () => true,
   },
@@ -12,7 +12,8 @@ export const Media: CollectionConfig = {
       type: "text",
       label: "Texto Alternativo (SEO)",
       required: true,
-      localized: true, // <-- AÑADIDO: Vital para el SEO internacional y accesibilidad
+      // Localized to ensure accessible descriptions match the current user language (SEO & accessibility)
+      localized: true,
     },
   ],
 };

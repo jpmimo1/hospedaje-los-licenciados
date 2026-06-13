@@ -76,7 +76,7 @@ export default async function RoomPage({ params }: Props) {
 
   const payload = await getPayload({ config: configPromise });
 
-  // 1. Ejecutamos ambas consultas en paralelo para máxima velocidad
+  // Execute both queries in parallel for maximum performance
   const [roomData, contactSettings] = await Promise.all([
     payload.find({
       collection: "rooms",
@@ -98,7 +98,6 @@ export default async function RoomPage({ params }: Props) {
       room.bedConfiguration as keyof typeof bedLabels.es
     ];
 
-  // 2. Preparamos la URL de WhatsApp
   const phone = contactSettings.phone || "";
   const message = `Hola, deseo reservar la habitación: ${room.name} (${room.price} PEN/noche).`;
   const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -107,7 +106,7 @@ export default async function RoomPage({ params }: Props) {
     <div className="bg-background min-h-screen pb-24 md:pb-20">
       <RoomGallery images={room.gallery!} roomName={room.name} />
       <div className="container mx-auto px-4 pt-8 max-w-6xl">
-        {/* BREADCRUMB */}
+        {/* Breadcrumb */}
         <LocalLink
           href="/#rooms"
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-6 text-sm font-medium"
@@ -116,10 +115,9 @@ export default async function RoomPage({ params }: Props) {
           {t.back}
         </LocalLink>
 
-        {/* GALERÍA GRID */}
+        {/* Gallery Grid */}
         {room.gallery && room.gallery.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-75 md:h-112.5 mb-10 rounded-2xl overflow-hidden">
-            {/* Imagen Principal (Móvil y Desktop) */}
             <div className="md:col-span-3 bg-muted relative group cursor-pointer overflow-hidden h-full">
               <LocalLink
                 href={`/room/${slug}?showGallery=true`}
@@ -143,7 +141,6 @@ export default async function RoomPage({ params }: Props) {
               </LocalLink>
             </div>
 
-            {/* Imágenes Secundarias (Solo Desktop) */}
             <div className="hidden md:flex flex-col gap-3 h-full">
               {room.gallery[1] && (
                 <LocalLink
@@ -172,7 +169,6 @@ export default async function RoomPage({ params }: Props) {
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
 
-                  {/* Overlay "Ver todas" */}
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-colors group-hover:bg-black/50">
                     <span className="text-white font-medium text-sm flex items-center gap-2">
                       <ImageIcon className="w-4 h-4" />
@@ -185,11 +181,10 @@ export default async function RoomPage({ params }: Props) {
           </div>
         )}
 
-        {/* LAYOUT 2 COLUMNAS */}
+        {/* 2-Column Layout */}
         <div className="flex flex-col lg:flex-row gap-12 relative">
-          {/* COLUMNA IZQUIERDA: INFORMACIÓN */}
+          {/* Left Column */}
           <div className="lg:w-2/3">
-            {/* Título y Highlights (Ahora 100% conectados a tu BD) */}
             <div className="mb-8">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
                 {room.name}
@@ -216,14 +211,12 @@ export default async function RoomPage({ params }: Props) {
 
             <hr className="border-border mb-8" />
 
-            {/* Descripción Extendida */}
             <div className="prose prose-slate dark:prose-invert max-w-none mb-10 text-muted-foreground">
               {room.description ? <RichText data={room.description} /> : null}
             </div>
 
             <hr className="border-border mb-8" />
 
-            {/* Comodidades Dinámicas */}
             <div className="mb-10">
               <h3 className="font-serif text-2xl font-bold text-foreground mb-6">
                 {t.amenitiesTitle}
@@ -250,7 +243,7 @@ export default async function RoomPage({ params }: Props) {
             </div>
           </div>
 
-          {/* COLUMNA DERECHA: WIDGET STICKY (Oculto en móviles) */}
+          {/* Right Column (Sticky Widget) */}
           <div className="lg:w-1/3 hidden lg:block">
             <div className="sticky top-28 bg-card border border-border rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-none">
               <div className="flex items-end justify-between mb-6">
@@ -264,7 +257,6 @@ export default async function RoomPage({ params }: Props) {
                 </div>
               </div>
 
-              {/* Políticas Globales */}
               <div className="bg-muted/20 border border-border rounded-xl p-4 mb-6 text-sm text-foreground">
                 <div className="flex justify-between mb-2">
                   <span className="text-muted-foreground">
@@ -314,7 +306,6 @@ export default async function RoomPage({ params }: Props) {
         </div>
       </div>
 
-      {/* BARRA INFERIOR PARA MÓVILES */}
       <MobileBottomBar
         locale={locale as "es" | "en"}
         variant="room"

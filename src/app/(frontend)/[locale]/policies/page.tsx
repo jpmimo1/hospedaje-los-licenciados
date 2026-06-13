@@ -1,10 +1,16 @@
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
-import { Clock, Ban, ShieldAlert, Dog, CigaretteOff } from "lucide-react";
+import {
+  Clock,
+  Ban,
+  ShieldAlert,
+  Dog,
+  CigaretteOff,
+  LucideIcon,
+} from "lucide-react";
 import type { Metadata } from "next";
 
-// 1. Diccionario bilingüe para los textos estáticos y SEO
 const dictionary = {
   es: {
     seoTitle: "Políticas y Reglas | Los Licenciados Cusco",
@@ -28,7 +34,6 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-// 2. Metadatos Dinámicos para SEO Internacional
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = dictionary[locale as "es" | "en"] || dictionary.es;
@@ -39,8 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Mapa de íconos (No necesita traducción porque los íconos son universales)
-const iconMap: any = {
+const iconMap: { [key: string]: LucideIcon } = {
   clock: Clock,
   ban: Ban,
   shield: ShieldAlert,
@@ -49,16 +53,14 @@ const iconMap: any = {
 };
 
 export default async function PoliciesPage({ params }: Props) {
-  // 3. Obtenemos el idioma actual
   const { locale } = await params;
   const t = dictionary[locale as "es" | "en"] || dictionary.es;
 
   const payload = await getPayload({ config: configPromise });
 
-  // 4. Pedimos las políticas a la base de datos filtrando por el idioma
   const { docs: policies } = await payload.find({
     collection: "policies",
-    locale: locale as any, // <-- ¡Clave para que Payload devuelva el idioma correcto!
+    locale: locale as Locales,
     sort: "createdAt",
   });
 
@@ -85,13 +87,11 @@ export default async function PoliciesPage({ params }: Props) {
                     <div className="bg-primary/10 p-3 rounded-xl text-primary-600">
                       <IconComponent className="w-8 h-8" />
                     </div>
-                    {/* El título de la política ya viene traducido desde Payload */}
                     <h2 className="font-serif text-2xl font-bold text-foreground">
                       {policy.title}
                     </h2>
                   </div>
                 </div>
-                {/* El contenido de Lexical (RichText) también viene en el idioma correcto */}
                 <div className="md:w-2/3 prose prose-stone dark:prose-invert max-w-none text-muted-foreground">
                   <RichText data={policy.content} />
                 </div>

@@ -1,12 +1,12 @@
 import configPromise from "@payload-config";
 import { RootLayout, handleServerFunctions } from "@payloadcms/next/layouts";
 import React from "react";
+import { importMap } from "./importMap.js";
+
 
 import "@payloadcms/next/css";
 
-import { importMap } from "./importMap.js";
-
-// 1. Creamos la función de servidor (Server Action) que Payload necesita
+// Creates the Server Action required by Payload CMS
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const serverFunction = async function (args: any) {
   "use server";
@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <RootLayout
       config={configPromise}
       importMap={importMap}
-      serverFunction={serverFunction} // 2. Se la pasamos como prop aquí
+      serverFunction={serverFunction}
     >
       {children}
     </RootLayout>

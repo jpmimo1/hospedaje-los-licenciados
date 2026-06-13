@@ -1,4 +1,4 @@
-import { CollectionConfig } from "payload";
+import type { CollectionConfig } from "payload";
 
 export const Amenities: CollectionConfig = {
   slug: "amenities",
@@ -15,13 +15,13 @@ export const Amenities: CollectionConfig = {
       label: "Nombre del Servicio",
       required: true,
       unique: true,
-      localized: true, // <-- AÑADIDO: "Wi-Fi Gratis" en ES, "Free Wi-Fi" en EN
+      localized: true,
     },
     {
       name: "icon",
       type: "text",
       label: "Icono (Emoji o Identificador)",
-      // No localizado: El string del icono (ej: 'wifi') funciona para ambos idiomas
+      // Not localized: The icon identification string (e.g., 'wifi') must remain identical across all languages to match frontend mapping
       admin: {
         description:
           "Puedes usar un emoji directo (ej: 📶) o el nombre de un icono de Lucide (ej: wifi)",

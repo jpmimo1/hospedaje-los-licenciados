@@ -8,7 +8,6 @@ type Props = {
   params: Promise<{ locale: Locales }>;
 };
 
-// 1. Diccionario de traducciones
 const dictionary = {
   es: {
     seoTitle: "Contacto | Los Licenciados Cusco",
@@ -44,7 +43,6 @@ const dictionary = {
   },
 };
 
-// 2. Metadatos SEO Bilingües
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = dictionary[locale as "es" | "en"] || dictionary.es;
@@ -61,7 +59,6 @@ export default async function ContactPage({ params }: Props) {
 
   const payload = await getPayload({ config: configPromise });
 
-  // 3. Obtenemos los ajustes de contacto traducidos
   const contactSettings = await payload.findGlobal({
     slug: "contact-settings",
     locale: locale,
@@ -70,7 +67,6 @@ export default async function ContactPage({ params }: Props) {
   return (
     <div className="bg-background min-h-screen pt-12 pb-20">
       <div className="container mx-auto px-4 max-w-6xl">
-        {/* Cabecera de la Página */}
         <div className="text-center mb-16">
           <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
             {t.title}
@@ -80,16 +76,13 @@ export default async function ContactPage({ params }: Props) {
           </p>
         </div>
 
-        {/* Dos Columnas: Información y Formulario */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20 items-start">
-          {/* Columna Izquierda: Información Directa */}
           <div className="space-y-8 lg:mt-5">
             <div>
               <h2 className="font-serif text-2xl font-bold text-foreground mb-6">
                 {t.infoTitle}
               </h2>
               <div className="space-y-6">
-                {/* Ubicación */}
                 <div className="flex items-start gap-4">
                   <div className="bg-primary/10 p-3 rounded-full text-primary-600 shrink-0">
                     <MapPin className="w-6 h-6" />
@@ -104,7 +97,6 @@ export default async function ContactPage({ params }: Props) {
                   </div>
                 </div>
 
-                {/* Teléfono */}
                 <div className="flex items-start gap-4">
                   <div className="bg-primary/10 p-3 rounded-full text-primary-600 shrink-0">
                     <Phone className="w-6 h-6" />
@@ -119,7 +111,6 @@ export default async function ContactPage({ params }: Props) {
                   </div>
                 </div>
 
-                {/* Correo */}
                 <div className="flex items-start gap-4">
                   <div className="bg-primary/10 p-3 rounded-full text-primary-600 shrink-0">
                     <Mail className="w-6 h-6" />
@@ -134,7 +125,6 @@ export default async function ContactPage({ params }: Props) {
                   </div>
                 </div>
 
-                {/* Horarios */}
                 <div className="flex items-start gap-4">
                   <div className="bg-primary/10 p-3 rounded-full text-primary-600 shrink-0">
                     <Clock className="w-6 h-6" />
@@ -153,12 +143,10 @@ export default async function ContactPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Columna Derecha: Formulario de Contacto */}
-          {/* Le pasamos el locale al formulario para que pueda traducir los labels ("Nombre", "Enviar") */}
+          {/* Pass the locale to the form so it can translate its internal labels */}
           <ContactForm locale={locale as "es" | "en"} />
         </div>
 
-        {/* Sección del Mapa */}
         <div className="rounded-2xl overflow-hidden border border-border shadow-md h-112.5 relative bg-muted">
           <iframe
             src={contactSettings.mapsUrl || ""}

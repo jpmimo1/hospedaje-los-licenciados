@@ -11,7 +11,7 @@ export const ContactSettings: GlobalConfig = {
       type: "text",
       label: "Número de WhatsApp",
       required: true,
-      // No localizado: El número es el mismo en cualquier país
+      // Not localized: The phone number remains the same across all countries
       admin: {
         description: "Incluir código de país sin el signo + (ej: 51987654321)",
       },
@@ -20,7 +20,7 @@ export const ContactSettings: GlobalConfig = {
       name: "defaultMessage",
       type: "text",
       label: "Mensaje Predeterminado de WhatsApp",
-      localized: true, // <-- AÑADIDO: Permite un mensaje de WhatsApp en inglés
+      localized: true,
       admin: {
         description:
           "Texto que aparecerá automáticamente en el chat del cliente (ej: ¡Hola! Deseo consultar disponibilidad...)",
@@ -31,14 +31,14 @@ export const ContactSettings: GlobalConfig = {
       type: "email",
       label: "Correo de Reservas",
       required: true,
-      // No localizado: El correo es el mismo
+      // Not localized: The email address remains the same
     },
     {
       name: "address",
       type: "text",
       label: "Dirección Física",
       required: true,
-      localized: true, // <-- AÑADIDO: Para traducir referencias (ej. "Centro Histórico" -> "Historic Center")
+      localized: true,
     },
     {
       type: "collapsible",
@@ -55,14 +55,12 @@ export const ContactSettings: GlobalConfig = {
               type: "number",
               label: "Latitud",
               required: true,
-              // No localizado
             },
             {
               name: "longitude",
               type: "number",
               label: "Longitud",
               required: true,
-              // No localizado
             },
           ],
         },
@@ -70,7 +68,7 @@ export const ContactSettings: GlobalConfig = {
           name: "mapsUrl",
           type: "text",
           label: "Enlace Directo de Google Maps (Botón Cómo Llegar)",
-          // No localizado: El link del mapa funciona igual en cualquier idioma
+          // Not localized: The Google Maps URL works the same across all languages
           admin: {
             description: "URL completa para abrir en la app de mapas externa",
           },
@@ -78,7 +76,7 @@ export const ContactSettings: GlobalConfig = {
       ],
     },
     {
-      type: "row", // Los ponemos en fila en el admin para que se vea ordenado
+      type: "row",
       fields: [
         {
           name: "checkInTime",

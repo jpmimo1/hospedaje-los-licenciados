@@ -11,7 +11,7 @@ type Translation = {
   value?: string;
 };
 
-// 1. EL DICCIONARIO VIVE AQUÍ ADENTRO (Encapsulación total)
+// Encapsulated dictionary within the component file to keep mobile UI strings self-contained
 const dictionary: Record<
   Locales,
   Record<"home" | "room" | "general", Translation>
@@ -42,7 +42,7 @@ interface MobileBottomBarProps {
   locale: Locales;
   variant: "home" | "room" | "general";
   href: string;
-  dynamicPrice?: string; // Solo se usa en 'home' y 'room' (Ej: "S/ 40")
+  dynamicPrice?: string;
 }
 
 export function MobileBottomBar({
@@ -51,12 +51,8 @@ export function MobileBottomBar({
   href,
   dynamicPrice,
 }: MobileBottomBarProps) {
-  // 2. Extraemos los textos según el idioma y la variante
   const t = dictionary[locale][variant] || dictionary.es[variant];
-
-  // Para la variante general, usamos el texto fijo del diccionario, si no, usamos el precio dinámico
   const displayValue = variant === "general" ? t.value : dynamicPrice;
-
   const isAnchor = href.startsWith("#");
 
   const handleScroll = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -67,10 +63,10 @@ export function MobileBottomBar({
   };
 
   useEffect(() => {
-    // Al montarse, añade una clase identificadora al body
+    // Inject identification class into body to allow global layout adjustment
     document.body.classList.add("has-mobile-bar");
 
-    // Al desmontarse (cambiar a una página sin la barra), limpia la clase
+    // Clean up the body class when transitioning to a view without the bar
     return () => {
       document.body.classList.remove("has-mobile-bar");
     };

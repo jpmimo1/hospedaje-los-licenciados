@@ -14,20 +14,22 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
 
   const [prevPathname, setPrevPathname] = useState(pathname);
 
-  // ✨ 2. EL PATRÓN MODERNO: En lugar de useEffect, verificamos durante el renderizado
+  // Derived state pattern: close menu on route change during render instead of using useEffect
   if (pathname !== prevPathname) {
-    setPrevPathname(pathname); // Actualizamos el tracker
-    setIsOpen(false); // Cerramos el menú
+    setPrevPathname(pathname);
+    setIsOpen(false);
   }
-  // 2. MAGIA UX: Bloquea el scroll de la página cuando el menú está abierto
+
+  // Scroll lock when the menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
+
     return () => {
-      document.body.style.overflow = "unset"; // Limpieza de seguridad
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -37,7 +39,6 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
     <div className="flex md:hidden items-center gap-2 sm:gap-4">
       <LanguageSwitcher />
 
-      {/* Botón Hamburguesa (z-50 relativo para que quede por encima del overlay) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 text-foreground hover:text-primary transition-colors focus:outline-none relative z-50"
@@ -46,8 +47,7 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
-      {/* OVERLAY (Fondo oscuro para cerrar al hacer clic fuera) */}
-      {/* top-[75px] asume que tu header mide exactamente eso (h-18.75). Si no, usa top-full */}
+      {/* Overlay (Assumes header is exactly 75px / h-18.75) */}
       {isOpen && (
         <div
           className="fixed inset-0 top-18.75 bg-black/60 backdrop-blur-sm z-40 animate-in fade-in duration-300"
@@ -56,7 +56,7 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
         />
       )}
 
-      {/* PANEL DESPLEGABLE */}
+      {/* Dropdown Panel */}
       <div
         className={`absolute top-full left-0 w-full bg-card border-b border-border shadow-xl transition-all duration-300 origin-top flex flex-col z-50 ${
           isOpen
@@ -100,7 +100,6 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
 
           <div className="h-px w-full bg-border my-0.5"></div>
 
-          {/* Selector de Apariencia */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="flex items-center justify-between w-full hover:text-primary transition-colors focus:outline-none group"
@@ -109,7 +108,6 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
               {t.theme}
             </span>
 
-            {/* Reemplazamos el componente <ThemeToggle /> por un indicador visual simple */}
             <div className="rounded-lg group-hover:text-primary transition-colors">
               <Sun className="w-5 h-5 hidden dark:block" />
               <Moon className="w-5 h-5 block dark:hidden" />

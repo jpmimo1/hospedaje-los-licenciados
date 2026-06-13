@@ -4,20 +4,16 @@ import { usePathname } from "next/navigation";
 import { Globe } from "lucide-react";
 
 export function LanguageSwitcher() {
-  const pathname = usePathname(); // Ej: detecta "/es/habitaciones"
+  const pathname = usePathname();
 
-  // Extraemos el idioma actual de la URL (siempre es el primer bloque)
   const currentLocale = pathname.split("/")[1];
 
-  // Si no hay idioma válido en la ruta (por si acaso), evitamos renderizar el botón aún
+  // If no valid locale is present in the route structure, prevent rendering to avoid broken paths
   if (currentLocale !== "es" && currentLocale !== "en") return null;
 
-  // Definimos cuál es el idioma al que vamos a cambiar
   const targetLocale = currentLocale === "es" ? "en" : "es";
 
   const toggleLanguage = () => {
-    // Reemplazamos exactamente el idioma en la URL actual y navegamos
-    // Ej: "/es/habitaciones" -> "/en/habitaciones"
     const newPath = pathname.replace(`/${currentLocale}`, `/${targetLocale}`);
     window.location.href = newPath;
   };

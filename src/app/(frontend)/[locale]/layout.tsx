@@ -4,7 +4,6 @@ import { Footer } from "@/components/Footer";
 import "../../globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
-// 1. Configuramos las fuentes y sus variables CSS
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -32,7 +31,6 @@ export default async function RootLayout({
   const locale = (await params).locale;
 
   return (
-    // 2. Inyectamos las variables en la etiqueta HTML
     <html
       lang={locale}
       className={`${inter.variable} ${lora.variable} scroll-smooth`}

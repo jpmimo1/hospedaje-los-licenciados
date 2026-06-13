@@ -4,7 +4,6 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import { LocalLink } from "./LocaleLink";
 
-// 2. Diccionario de traducciones estáticas
 const dictionary = {
   es: {
     usefulLinks: "Enlaces Útiles",
@@ -34,11 +33,9 @@ const dictionary = {
   },
 };
 
-// 3. El componente recibe el idioma actual
 export async function Footer({ locale }: { locale: "es" | "en" }) {
   const payload = await getPayload({ config: configPromise });
 
-  // 4. Solicitamos los datos globales en el idioma correcto
   const contactSettings = await payload.findGlobal({
     slug: "contact-settings",
     locale: locale,
@@ -52,11 +49,10 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
   const t = dictionary[locale] || dictionary.es;
 
   return (
-    // DISEÑO CORREGIDO: Usamos bg-muted/30 para un contraste suave en ambos temas
     <footer className="bg-primary-500/20 dark:bg-primary-700/5 border-t border-muted-foreground/20 pt-16 pb-8">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[450px_repeat(3,minmax(0,1fr))] gap-8 mb-12">
-        {/* COLUMNA 1: Branding */}
-        <div className="flex flex-col items-center  md:items-start">
+        {/* Column 1: Branding */}
+        <div className="flex flex-col items-center md:items-start">
           <div className="flex flex-col items-center justify-center">
             <Image
               src="/logo.svg"
@@ -83,7 +79,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
           </div>
         </div>
 
-        {/* COLUMNA 2: Enlaces Útiles */}
+        {/* Column 2: Useful Links */}
         <div>
           <h4 className="font-bold mb-4 text-foreground">{t.usefulLinks}</h4>
           <ul className="space-y-3 text-muted-foreground text-sm">
@@ -122,7 +118,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
           </ul>
         </div>
 
-        {/* COLUMNA 3: Contacto */}
+        {/* Column 3: Contact */}
         <div>
           <h4 className="font-bold mb-4 text-foreground">{t.contactTitle}</h4>
           <ul className="space-y-3 text-muted-foreground text-sm">
@@ -137,7 +133,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
           </ul>
         </div>
 
-        {/* COLUMNA 4: Ubicación */}
+        {/* Column 4: Location */}
         <div>
           <h4 className="font-bold mb-4 text-foreground">{t.location}</h4>
           <div className="flex items-start gap-3 text-muted-foreground text-sm mb-4">
@@ -157,14 +153,13 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
         </div>
       </div>
 
-      {/* DERECHOS Y POLÍTICAS INFERIORES */}
+      {/* Copyright & Bottom Bars */}
       <div className="container mx-auto px-4 border-t border-muted-foreground/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground text-sm">
         <div className="flex gap-x-5 flex-wrap">
           <p className="text-sm text-muted-foreground text-center md:text-left grow">
             © {new Date().getFullYear()} Hospedaje Los Licenciados. {t.rights}
           </p>
 
-          {/* TU FIRMA (Discreta y profesional) */}
           <p className="text-sm text-muted-foreground text-center md:text-right grow">
             {t.developedBy}{" "}
             <a

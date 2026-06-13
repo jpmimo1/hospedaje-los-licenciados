@@ -36,7 +36,7 @@ export const AboutPage: GlobalConfig = {
     },
 
     // =========================================================
-    // NUEVA SECCIÓN: MÉTRICAS / VALORES (Soporta la franja de datos)
+    // METRICS
     // =========================================================
     {
       name: "metrics",
@@ -44,7 +44,8 @@ export const AboutPage: GlobalConfig = {
       label: "Métricas y Datos Clave",
       localized: true,
       minRows: 2,
-      maxRows: 4, // Limitado a 4 para mantener el grid simétrico
+      // Limited to 4 to maintain a symmetrical grid in the UI
+      maxRows: 4,
       labels: {
         singular: "Métrica",
         plural: "Métricas",
@@ -73,7 +74,7 @@ export const AboutPage: GlobalConfig = {
     },
 
     // =========================================================
-    // SECCIÓN MEJORADA: MISIÓN, VISIÓN Y VALORES (Con ícono estandarizado)
+    // MISSION, VISION & VALUES
     // =========================================================
     {
       name: "missionVision",
@@ -98,7 +99,7 @@ export const AboutPage: GlobalConfig = {
           required: true,
           label: "Descripción",
         },
-        // AGREGADO: Selector de ícono controlado para evitar errores
+        // Controlled icon selector to prevent rendering errors on the frontend
         {
           name: "icon",
           type: "select",

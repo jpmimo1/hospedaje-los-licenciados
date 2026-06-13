@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { CalendarDays, Send } from "lucide-react";
 
-// 1. Diccionario bilingüe para el cliente
 const dictionary = {
   es: {
     successTitle: "¡Mensaje Enviado!",
@@ -11,7 +10,7 @@ const dictionary = {
       "Gracias por escribirnos. Hemos recibido tu consulta y te responderemos lo más pronto posible.",
     formTitle: "Envíanos un mensaje",
     errorMsg:
-      "Hubo un problema al enviar tu mensaje. Por favor, intenta de nuevo o contáctanos por WhatsApp.",
+      "Hubo un problem al enviar tu mensaje. Por favor, intenta de nuevo o contáctanos por WhatsApp.",
     nameLabel: "Nombre Completo",
     namePlaceholder: "Ej. Juan Pérez",
     emailLabel: "Correo Electrónico",
@@ -43,13 +42,11 @@ const dictionary = {
   },
 };
 
-// 2. Definimos que el componente recibe el prop 'locale'
 export function ContactForm({ locale }: { locale: "es" | "en" }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // 3. Seleccionamos el idioma correcto
   const t = dictionary[locale] || dictionary.es;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,9 +75,9 @@ export function ContactForm({ locale }: { locale: "es" | "en" }) {
       if (!response.ok) throw new Error("Error al enviar el mensaje");
 
       setIsSuccess(true);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      setError(t.errorMsg); // Mostramos el error en el idioma correcto
+      setError(t.errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -146,7 +143,6 @@ export function ContactForm({ locale }: { locale: "es" | "en" }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* CHECK-IN */}
           <div>
             <label
               htmlFor="checkIn"
@@ -162,7 +158,7 @@ export function ContactForm({ locale }: { locale: "es" | "en" }) {
                 type="date"
                 id="checkIn"
                 name="checkIn"
-                // Esta es la magia moderna: abre el calendario al hacer clic en cualquier parte
+                // Native programmatic invocation to trigger the date picker UI upon any click inside the element
                 onClick={(e) => {
                   if ("showPicker" in HTMLInputElement.prototype) {
                     e.currentTarget.showPicker();
@@ -173,7 +169,6 @@ export function ContactForm({ locale }: { locale: "es" | "en" }) {
             </div>
           </div>
 
-          {/* CHECK-OUT */}
           <div>
             <label
               htmlFor="checkOut"

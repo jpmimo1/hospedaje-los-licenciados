@@ -2,8 +2,7 @@ import configPromise from "@payload-config";
 import { RootPage, generatePageMetadata } from "@payloadcms/next/views";
 import { importMap } from "../importMap.js";
 
-// 1. En Payload v3, generatePageMetadata ya no necesita importMap, solo la promesa de configuración
-
+// In Payload v3, generatePageMetadata no longer requires importMap, only the config promise
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const generateMetadata = async ({ params, searchParams }: any) =>
   generatePageMetadata({
@@ -14,7 +13,7 @@ export const generateMetadata = async ({ params, searchParams }: any) =>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function Page({ params, searchParams }: any) {
-  // En el RootPage sí es necesario pasar el importMap
+  // RootPage still requires the importMap to be passed
   return RootPage({
     config: configPromise,
     params: await params,

@@ -1,12 +1,12 @@
 import { useSyncExternalStore } from "react";
 
-// Una función vacía porque no necesitamos suscribirnos a nada
+// Empty subscription since there is no actual external store to listen to
 const emptySubscribe = () => () => {};
 
 export function useIsClient() {
   return useSyncExternalStore(
     emptySubscribe,
-    () => true, // getSnapshot: En el cliente siempre es true
-    () => false, // getServerSnapshot: En el servidor siempre es false
+    () => true,
+    () => false,
   );
 }

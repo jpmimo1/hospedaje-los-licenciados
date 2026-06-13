@@ -17,7 +17,7 @@ export const SiteContent: GlobalConfig = {
               type: "text",
               label: "Título de Bienvenida",
               required: true,
-              localized: true, // <-- AÑADIDO
+              localized: true,
               defaultValue: "Tu hogar en el corazón de Cusco",
             },
             {
@@ -25,7 +25,7 @@ export const SiteContent: GlobalConfig = {
               type: "textarea",
               label: "Subtítulo",
               required: true,
-              localized: true, // <-- AÑADIDO
+              localized: true,
               defaultValue:
                 "Descansa en un ambiente cálido, seguro y familiar a pocos pasos del centro histórico.",
             },
@@ -46,7 +46,7 @@ export const SiteContent: GlobalConfig = {
               type: "text",
               label: "Título de la Sección",
               required: true,
-              localized: true, // <-- AÑADIDO
+              localized: true,
               defaultValue: "Siente la verdadera calidez cusqueña",
             },
             {
@@ -54,7 +54,7 @@ export const SiteContent: GlobalConfig = {
               type: "richText",
               label: "Nuestra Historia / Descripción",
               required: true,
-              localized: true, // <-- AÑADIDO
+              localized: true,
             },
             {
               name: "aboutImage",
@@ -74,7 +74,7 @@ export const SiteContent: GlobalConfig = {
               type: "relationship",
               relationTo: "amenities",
               hasMany: true,
-              // No localizado: La relación se mantiene intacta para ambos idiomas.
+              // Not localized: The relationship remains intact across both languages.
             },
           ],
         },
@@ -86,7 +86,7 @@ export const SiteContent: GlobalConfig = {
               type: "text",
               label: "Descripción Corta / Eslogan",
               required: true,
-              localized: true, // <-- AÑADIDO
+              localized: true,
               defaultValue: "Tu refugio andino en el corazón de Cusco.",
             },
           ],

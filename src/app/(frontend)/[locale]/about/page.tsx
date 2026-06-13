@@ -5,9 +5,6 @@ import { notFound } from "next/navigation";
 import { DynamicIcon } from "@/components/DynamicIcon";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 
-// IMPORTANTE: Asegúrate de importar tu componente para renderizar Lexical si ya lo tienes
-// import RichText from "@/components/RichText";
-
 const dictionaries = {
   es: {
     eyebrow: "Sobre Nosotros",
@@ -29,7 +26,6 @@ export default async function AboutPage({ params }: Props) {
 
   const payload = await getPayload({ config: configPromise });
 
-  // 2. Consultamos el Global de Payload para el idioma actual
   const aboutData = await payload.findGlobal({
     slug: "about-page",
     locale: locale,
@@ -39,7 +35,6 @@ export default async function AboutPage({ params }: Props) {
 
   const t = dictionaries[locale as "es" | "en"] || dictionaries.es;
 
-  // Extraemos la URL segura de la imagen principal
   const mainImageUrl =
     aboutData.mainImage && typeof aboutData.mainImage !== "number"
       ? aboutData.mainImage.url
@@ -48,7 +43,7 @@ export default async function AboutPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-background font-sans text-muted-foreground pb-20">
       {/* =========================================================
-          1. HERO SECTION (Título e introducción dinámica)
+          1. HERO SECTION
          ========================================================= */}
       <div className="max-w-4xl mx-auto text-center pt-20 pb-16 px-4">
         <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 block animate-fade-in">
@@ -60,13 +55,11 @@ export default async function AboutPage({ params }: Props) {
       </div>
 
       {/* =========================================================
-          2. HISTORIA (Layout Asimétrico: Imagen + Contenido)
+          2. HISTORY
          ========================================================= */}
       <div className="max-w-6xl mx-auto px-4 mb-24">
         <div className="flex flex-col lg:flex-row gap-16 items-center">
-          {/* Contenedor de la Imagen con Marco Decorativo */}
           <div className="w-full lg:w-1/2 relative aspect-4/3 md:aspect-video lg:aspect-4/3">
-            {/* Efecto de fondo 3D */}
             <div className="absolute -bottom-4 -left-4 w-full h-full bg-primary/10 rounded-2xl -z-10 hidden md:block"></div>
 
             {mainImageUrl ? (
@@ -85,14 +78,8 @@ export default async function AboutPage({ params }: Props) {
             )}
           </div>
 
-          {/* Bloque de Texto Enriquecido (Lexical) */}
           <div className="w-full lg:w-1/2">
             <div className="prose prose-slate dark:prose-invert prose-lg max-w-none text-muted-foreground">
-              {/* Cuando tengas tu componente renderizador de Lexical descomentas esto: */}
-              {/* <RichText content={aboutData.content} /> */}
-
-              {/* Fallback temporal para visualización */}
-
               <RichText data={aboutData.content} className="leading-relaxed" />
             </div>
           </div>
@@ -100,7 +87,7 @@ export default async function AboutPage({ params }: Props) {
       </div>
 
       {/* =========================================================
-          3. FRANJA DE MÉTRICAS / VALORES (Dinámica desde Array)
+          3. METRICS
          ========================================================= */}
       {aboutData.metrics && aboutData.metrics.length > 0 && (
         <div className="border-y border-border bg-card shadow-sm">
@@ -122,7 +109,7 @@ export default async function AboutPage({ params }: Props) {
       )}
 
       {/* =========================================================
-          4. BLOQUES DE MISIÓN, VISIÓN Y VALORES
+          4. MISSION, VISION & VALUES
          ========================================================= */}
       {aboutData.missionVision && aboutData.missionVision.length > 0 && (
         <div className="max-w-6xl mx-auto px-4 py-20">
@@ -133,7 +120,6 @@ export default async function AboutPage({ params }: Props) {
                   key={block.id}
                   className="bg-card p-8 md:p-10 rounded-3xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.02)] flex flex-col h-full"
                 >
-                  {/* Ícono animado sutilmente al hacer hover */}
                   <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 transition-transform ">
                     <DynamicIcon
                       name={block.icon}

@@ -15,14 +15,14 @@ export const Policies: CollectionConfig = {
       name: "title",
       type: "text",
       required: true,
-      localized: true, // <-- AÑADIDO: Vital para traducir el título de la regla
+      localized: true,
       label: "Título de la Política (Ej: Check-in y Check-out)",
     },
     {
       name: "icon",
       type: "select",
       label: "Icono Representativo",
-      // No localizado: El ícono seleccionado ("clock", "ban", etc.) sirve para ambos idiomas
+      // Not localized: The selected key string ('clock', 'ban', etc.) is reused across all languages to match the icon map
       options: [
         { label: "Reloj (Horarios)", value: "clock" },
         { label: "Prohibido (Restricciones)", value: "ban" },
@@ -36,7 +36,7 @@ export const Policies: CollectionConfig = {
       type: "richText",
       editor: lexicalEditor({}),
       required: true,
-      localized: true, // <-- AÑADIDO: El cuerpo detallado de la regla debe estar en el idioma del usuario
+      localized: true,
       label: "Detalle de la Política",
     },
   ],
