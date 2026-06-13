@@ -31,16 +31,16 @@ Al modificar la estructura de datos (ej. añadir campos o colecciones), sigue es
 
 **1. Generar la migración (`migrate:create`)**
 
-~~~bash
+```bash
 npm run migrate:create -- --name nombre-descriptivo
-~~~
+```
 * Payload detecta los cambios y genera un archivo automatizado en `src/migrations/` con las instrucciones SQL.
 
 **2. Aplicar la migración (`migrate`)**
 
-~~~bash
+```bash
 npm run migrate
-~~~
+```
 * Ejecuta el archivo generado para actualizar físicamente tu BD local.
 
 > **Regla de oro:** ¡No edites los archivos de `src/migrations/` manualmente! Estos archivos **deben subirse a tu repositorio de Git**, ya que contienen el historial de tu BD.
@@ -51,25 +51,25 @@ En producción solo aplicamos las migraciones existentes:
 
 1. **Despliegue:** Haz `git pull` de tu código (incluyendo la carpeta `src/migrations/`) en tu VPS.
 2. **Aplicar cambios:** Al ejecutar el contenedor Docker, asegúrate de correr:
-   ~~~bash
+   ```bash
    npm run migrate
-   ~~~
+   ```
 3. Payload detectará las migraciones pendientes y actualizará la base de datos de producción de forma segura.
 
 ## 💻 Instalación y Ejecución Local
 
 1. Clona el repositorio e instala las dependencias:
-   ~~~bash
+   ```bash
    npm install
-   ~~~
+   ```
 2. Configura tu archivo `.env.local`.
 3. Aplica las migraciones iniciales a tu base de datos:
-   ~~~bash
+   ```bash
    npm run migrate
-   ~~~
+   ```
 4. Inicia el servidor de desarrollo:
-   ~~~bash
+   ```bash
    npm run dev
-   ~~~
+   ```
 
 El panel de administración estará disponible en `http://localhost:3000/admin`.
