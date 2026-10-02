@@ -11,11 +11,11 @@ import { MobileBottomBar } from "@/components/MobileBottomBar";
 const dictionary = {
   es: {
     heroButton: "Ver Habitaciones",
-    amenitiesTitle: "Servicios Generales",
-    amenitiesSubtitle: "Todo el confort que mereces",
+    amenitiesTitle: "Nuestros servicios",
+    amenitiesSubtitle: "Lo esencial para una estadía cómoda.",
     roomsTitle: "Nuestras Habitaciones",
     roomsSubtitle:
-      "Espacios diseñados para tu descanso absoluto después de explorar las maravillas de Cusco.",
+      "Elige tu espacio para descansar, con baño privado o compartido.",
     upTo: "Hasta",
     persons: "pers.",
     privateBath: "Baño privado",
@@ -26,11 +26,11 @@ const dictionary = {
   },
   en: {
     heroButton: "View Rooms",
-    amenitiesTitle: "General Amenities",
-    amenitiesSubtitle: "All the comfort you deserve",
+    amenitiesTitle: "Our amenities",
+    amenitiesSubtitle: "The essentials for a comfortable stay.",
     roomsTitle: "Our Rooms",
     roomsSubtitle:
-      "Spaces designed for your absolute rest after exploring the wonders of Cusco.",
+      "Find your place to rest, with a private or shared bathroom.",
     upTo: "Up to",
     persons: "guests",
     privateBath: "Private bathroom",

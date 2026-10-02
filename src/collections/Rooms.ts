@@ -18,6 +18,7 @@ export const Rooms: CollectionConfig = {
       name: "slug",
       type: "text",
       required: true,
+      localized: true,
       unique: true,
       index: true,
       label: "Identificador de URL (Slug)",
