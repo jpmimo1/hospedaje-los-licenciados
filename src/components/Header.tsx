@@ -3,7 +3,7 @@ import configPromise from "@payload-config";
 import Image from "next/image";
 import { CalendarCheck } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { IRoomSlugs, LanguageSwitcher } from "./LanguageSwitcher";
 import { LocalLink } from "./LocaleLink";
 import { MobileMenu } from "./MobileMenu";
 
@@ -28,10 +28,55 @@ const dictionary = {
 
 export async function Header({ locale }: { locale: "es" | "en" }) {
   const payload = await getPayload({ config: configPromise });
-  const contactSettings = await payload.findGlobal({
-    slug: "contact-settings",
-    locale: locale,
-  });
+  const [contactSettings, roomsEs, roomsEn] = await Promise.all([
+    payload.findGlobal({
+      slug: "contact-settings",
+      locale,
+    }),
+    payload.find({
+      collection: "rooms",
+      locale: "es",
+      fallbackLocale: false,
+      select: { slug: true },
+      depth: 0,
+      pagination: false,
+      overrideAccess: false,
+    }),
+    payload.find({
+      collection: "rooms",
+      locale: "en",
+      fallbackLocale: false,
+      select: { slug: true },
+      depth: 0,
+      pagination: false,
+      overrideAccess: false,
+    }),
+  ]);
+
+  const roomsById = new Map<IRoomSlugs["id"], IRoomSlugs>();
+
+  for (const room of roomsEs.docs) {
+    roomsById.set(room.id, {
+      id: room.id,
+      slug: {
+        es: room.slug || null,
+      },
+    });
+  }
+
+  for (const room of roomsEn.docs) {
+    const existing = roomsById.get(room.id);
+
+    roomsById.set(room.id, {
+      id: room.id,
+      slug: {
+        ...existing?.slug,
+        en: room.slug || null,
+      },
+    });
+  }
+
+  const roomSlugs: IRoomSlugs[] = Array.from(roomsById.values());
 
   const t = dictionary[locale] || dictionary.es;
 
@@ -96,7 +141,7 @@ export async function Header({ locale }: { locale: "es" | "en" }) {
           </nav>
 
           <div className="flex items-center gap-4">
-            <LanguageSwitcher />
+            <LanguageSwitcher roomSlugs={roomSlugs} />
             <ThemeToggle />
             <LocalLink
               href={whatsappUrl}
@@ -111,7 +156,7 @@ export async function Header({ locale }: { locale: "es" | "en" }) {
         </div>
 
         {/* Mobile Navigation */}
-        <MobileMenu t={t} />
+        <MobileMenu t={t} roomSlugs={roomSlugs} />
       </div>
     </header>
   );

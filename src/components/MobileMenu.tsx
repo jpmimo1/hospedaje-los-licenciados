@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronRight, Sun, Moon } from "lucide-react";
 import { LocalLink } from "./LocaleLink";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { IRoomSlugs, LanguageSwitcher } from "./LanguageSwitcher";
 import { useTheme } from "next-themes";
 
-export function MobileMenu({ t }: { t: Record<string, string> }) {
+export function MobileMenu({ t, roomSlugs }: { t: Record<string, string>, roomSlugs: IRoomSlugs[]; }) {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
@@ -37,7 +37,7 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
 
   return (
     <div className="flex md:hidden items-center gap-2 sm:gap-4">
-      <LanguageSwitcher />
+      <LanguageSwitcher roomSlugs={roomSlugs} />
 
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -58,11 +58,10 @@ export function MobileMenu({ t }: { t: Record<string, string> }) {
 
       {/* Dropdown Panel */}
       <div
-        className={`absolute top-full left-0 w-full bg-card border-b border-border shadow-xl transition-all duration-300 origin-top flex flex-col z-50 ${
-          isOpen
-            ? "opacity-100 visible translate-y-0"
-            : "opacity-0 invisible -translate-y-4 pointer-events-none"
-        }`}
+        className={`absolute top-full left-0 w-full bg-card border-b border-border shadow-xl transition-all duration-300 origin-top flex flex-col z-50 ${isOpen
+          ? "opacity-100 visible translate-y-0"
+          : "opacity-0 invisible -translate-y-4 pointer-events-none"
+          }`}
       >
         <nav className="flex flex-col px-6 py-8 gap-6 font-medium text-foreground">
           <LocalLink
