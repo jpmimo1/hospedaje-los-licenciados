@@ -140,9 +140,9 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
             <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <p>{contactSettings.address}</p>
           </div>
-          {contactSettings.mapsUrl && (
+          {contactSettings.googleMapsUrl && (
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${contactSettings.latitude},${contactSettings.longitude}`}
+              href={contactSettings.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:text-primary/80 underline text-sm transition-colors inline-block ml-7"
