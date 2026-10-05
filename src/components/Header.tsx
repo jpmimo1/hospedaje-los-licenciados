@@ -13,7 +13,7 @@ const dictionary = {
     rooms: "Habitaciones",
     about: "Nosotros",
     contact: "Contacto",
-    book: "Reserva Directa",
+    book: "Consultar disponibilidad",
     theme: "Apariencia",
   },
   en: {
@@ -21,7 +21,7 @@ const dictionary = {
     rooms: "Rooms",
     about: "About Us",
     contact: "Contact",
-    book: "Book Direct",
+    book: "Check availability",
     theme: "Appearance",
   },
 };

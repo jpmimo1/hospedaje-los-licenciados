@@ -8,7 +8,7 @@ const dictionary = {
   es: {
     usefulLinks: "Enlaces Útiles",
     home: "Inicio",
-    about: "Nuestra Historia",
+    about: "Nosotros",
     contactTitle: "Contacto",
     contactLink: "Contacto",
     policies: "Políticas y Reglas",
@@ -21,7 +21,7 @@ const dictionary = {
   en: {
     usefulLinks: "Useful Links",
     home: "Home",
-    about: "Our Story",
+    about: "About Us",
     contactTitle: "Contact Us",
     contactLink: "Contact",
     policies: "Policies & Rules",

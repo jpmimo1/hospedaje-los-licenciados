@@ -13,6 +13,7 @@ import * as migration_20260527_051908 from './20260527_051908';
 import * as migration_20260527_071755 from './20260527_071755';
 import * as migration_20261002_222417 from './20261002_222417';
 import * as migration_20261005_002731_add_google_maps_url from './20261005_002731_add_google_maps_url';
+import * as migration_20261005_181640_update_policies_icons from './20261005_181640_update_policies_icons';
 
 export const migrations = [
   {
@@ -88,6 +89,11 @@ export const migrations = [
   {
     up: migration_20261005_002731_add_google_maps_url.up,
     down: migration_20261005_002731_add_google_maps_url.down,
-    name: '20261005_002731_add_google_maps_url'
+    name: '20261005_002731_add_google_maps_url',
+  },
+  {
+    up: migration_20261005_181640_update_policies_icons.up,
+    down: migration_20261005_181640_update_policies_icons.down,
+    name: '20261005_181640_update_policies_icons'
   },
 ];

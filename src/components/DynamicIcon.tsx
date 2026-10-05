@@ -1,25 +1,40 @@
-import dynamic from "next/dynamic";
-import { LucideProps, CheckCircle2 } from "lucide-react";
-import dynamicIconImports from "lucide-react/dynamicIconImports";
+"use client"
 
-interface DynamicIconProps extends LucideProps {
-  name?: string;
+import { type LucideProps, CheckCircle2 } from "lucide-react";
+import {
+  DynamicIcon as LucideDynamicIcon,
+  iconNames
+} from "lucide-react/dynamic";
+import type { ComponentProps } from "react"
+
+type TIconName = ComponentProps<typeof LucideDynamicIcon>["name"];
+
+interface IDynamicIconProps extends LucideProps {
+  name?: string | undefined;
 }
 
-export function DynamicIcon({ name, ...props }: DynamicIconProps) {
-  // Note: Lucide React catalog expects kebab-case strings (e.g., 'wifi', 'coffee', 'air-vent')
-  const normalizedName = name?.toLowerCase().trim();
+const validIconNames = new Set<string>(iconNames);
 
-  const isIconValid = normalizedName && normalizedName in dynamicIconImports;
+function isIconName(name: string): name is TIconName {
+  return validIconNames.has(name);
+}
 
-  if (!isIconValid) {
+export function DynamicIcon({
+  name,
+  ...props
+}: IDynamicIconProps) {
+  const normalizedName = name?.trim().toLowerCase() ?? "";
+  const resolvedName = normalizedName;
+
+  if (!isIconName(resolvedName)) {
     return <CheckCircle2 {...props} />;
   }
 
-  const IconComponent = dynamic(
-    dynamicIconImports[normalizedName as keyof typeof dynamicIconImports],
+  return (
+    <LucideDynamicIcon
+      key={resolvedName}
+      name={resolvedName}
+      {...props}
+    />
   );
-
-  // eslint-disable-next-line react-hooks/static-components
-  return <IconComponent {...props} />;
 }

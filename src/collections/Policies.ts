@@ -24,11 +24,16 @@ export const Policies: CollectionConfig = {
       label: "Icono Representativo",
       // Not localized: The selected key string ('clock', 'ban', etc.) is reused across all languages to match the icon map
       options: [
-        { label: "Reloj (Horarios)", value: "clock" },
-        { label: "Prohibido (Restricciones)", value: "ban" },
-        { label: "Escudo (Seguridad)", value: "shield" },
-        { label: "Mascota", value: "dog" },
-        { label: "Cigarrillo (No fumar)", value: "smoking" },
+        { label: "Horarios", value: "clock" },
+        { label: "Restricciones", value: "ban" },
+        { label: "Seguridad", value: "shield" },
+        { label: "Mascotas", value: "paw-print" },
+        { label: "No fumar", value: "cigarette-off" },
+        { label: "Reservas y pagos", value: "credit-card" },
+        { label: "Cancelaciones", value: "calendar-x" },
+        { label: "Convivencia", value: "heart-handshake" },
+        { label: "Cochera", value: "car" },
+        { label: "Guarda equipaje", value: "luggage" },
       ],
     },
     {
