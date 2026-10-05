@@ -3,6 +3,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 
 export const Policies: CollectionConfig = {
   slug: "policies",
+  orderable: true,
   admin: {
     useAsTitle: "title",
     group: "Páginas",

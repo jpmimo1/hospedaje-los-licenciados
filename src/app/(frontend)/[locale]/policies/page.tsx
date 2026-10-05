@@ -89,7 +89,7 @@ export default async function PoliciesPage({
   const { docs: policies } = await payload.find({
     collection: "policies",
     locale,
-    sort: "createdAt",
+    sort: "_order",
     pagination: false,
   });
 
