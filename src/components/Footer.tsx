@@ -160,6 +160,10 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
             © {new Date().getFullYear()} Hospedaje Los Licenciados. {t.rights}
           </p>
 
+
+        </div>
+
+        <div className="flex gap-4">
           <p className="text-sm text-muted-foreground text-center md:text-right grow">
             {t.developedBy}{" "}
             <a
@@ -171,15 +175,6 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
               Jean Paul Flores
             </a>
           </p>
-        </div>
-
-        <div className="flex gap-4">
-          <LocalLink
-            href="/policies"
-            className="hover:text-primary-500 transition-colors"
-          >
-            {t.terms}
-          </LocalLink>
         </div>
       </div>
     </footer>
