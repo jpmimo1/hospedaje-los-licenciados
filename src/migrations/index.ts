@@ -12,6 +12,7 @@ import * as migration_20260526_053304 from './20260526_053304';
 import * as migration_20260527_051908 from './20260527_051908';
 import * as migration_20260527_071755 from './20260527_071755';
 import * as migration_20261002_222417 from './20261002_222417';
+import * as migration_20261005_002731_add_google_maps_url from './20261005_002731_add_google_maps_url';
 
 export const migrations = [
   {
@@ -82,6 +83,11 @@ export const migrations = [
   {
     up: migration_20261002_222417.up,
     down: migration_20261002_222417.down,
-    name: '20261002_222417'
+    name: '20261002_222417',
+  },
+  {
+    up: migration_20261005_002731_add_google_maps_url.up,
+    down: migration_20261005_002731_add_google_maps_url.down,
+    name: '20261005_002731_add_google_maps_url'
   },
 ];

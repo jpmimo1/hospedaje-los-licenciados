@@ -20,9 +20,10 @@ const dictionary = {
     persons: "pers.",
     privateBath: "Baño privado",
     viewDetails: "Ver detalles",
+    aboutUsTitle: "Sobre nosotros",
     aboutFallback:
       "Bienvenido a Hospedaje Los Licenciados. Un refugio familiar donde la tradición andina y el confort moderno se encuentran para ofrecerte una experiencia inolvidable en el corazón de Cusco.",
-    readFullStory: "Leer nuestra historia completa",
+    readFullStory: "Conócenos",
   },
   en: {
     heroButton: "View Rooms",
@@ -35,9 +36,10 @@ const dictionary = {
     persons: "guests",
     privateBath: "Private bathroom",
     viewDetails: "View details",
+    aboutUsTitle: "About us",
     aboutFallback:
       "Welcome to Hospedaje Los Licenciados. A family refuge where Andean tradition and modern comfort meet to offer you an unforgettable experience in the heart of Cusco.",
-    readFullStory: "Read our full story",
+    readFullStory: "Get to know us",
   },
 };
 
@@ -196,7 +198,7 @@ export default async function HomePage({
 
             <div className="w-full lg:w-1/2">
               <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 block">
-                About Us
+                {t.aboutUsTitle}
               </span>
 
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6 leading-tight">

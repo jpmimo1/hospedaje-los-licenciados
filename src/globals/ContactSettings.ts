@@ -67,10 +67,19 @@ export const ContactSettings: GlobalConfig = {
         {
           name: "mapsUrl",
           type: "text",
-          label: "Enlace Directo de Google Maps (Botón Cómo Llegar)",
-          // Not localized: The Google Maps URL works the same across all languages
+          label: "URL del mapa insertado (iframe)",
           admin: {
-            description: "URL completa para abrir en la app de mapas externa",
+            description:
+              "Google Maps → Compartir → Insertar un mapa. Copia únicamente la URL del atributo src, no el código HTML completo.",
+          },
+        },
+        {
+          name: "googleMapsUrl",
+          type: "text",
+          label: "Enlace a la ficha del negocio en Google Maps",
+          admin: {
+            description:
+              "Abre la ficha del hospedaje → Compartir → Copiar enlace. Se utiliza en el botón Ver en Google Maps.",
           },
         },
       ],
