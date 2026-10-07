@@ -73,7 +73,7 @@ export function MobileMenu({ t, roomSlugs }: { t: Record<string, string>, roomSl
             <ChevronRight className="w-4 h-4 text-muted-foreground opacity-50" />
           </LocalLink>
           <LocalLink
-            href="/#rooms"
+            href="/rooms"
             onClick={closeMenu}
             className="flex justify-between items-center hover:text-primary transition-colors text-lg"
           >

@@ -121,7 +121,7 @@ export async function Header({ locale }: { locale: "es" | "en" }) {
               {t.home}
             </LocalLink>
             <LocalLink
-              href="/#rooms"
+              href="/rooms"
               className="hover:text-primary transition-colors"
             >
               {t.rooms}

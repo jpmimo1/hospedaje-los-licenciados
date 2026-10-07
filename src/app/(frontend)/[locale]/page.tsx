@@ -14,6 +14,7 @@ const dictionary = {
     amenitiesTitle: "Nuestros servicios",
     amenitiesSubtitle: "Lo esencial para una estadía cómoda.",
     roomsTitle: "Nuestras Habitaciones",
+    viewAllRooms: "Ver todas las habitaciones",
     roomsSubtitle:
       "Elige tu espacio para descansar, con baño privado o compartido.",
     upTo: "Hasta",
@@ -30,6 +31,7 @@ const dictionary = {
     amenitiesTitle: "Our amenities",
     amenitiesSubtitle: "The essentials for a comfortable stay.",
     roomsTitle: "Our Rooms",
+    viewAllRooms: "View all rooms",
     roomsSubtitle:
       "Find your place to rest, with a private or shared bathroom.",
     upTo: "Up to",
@@ -168,6 +170,15 @@ export default async function HomePage({
             {roomsData.docs.map((room) => {
               return <RoomCard key={room.id} room={room} locale={locale} />;
             })}
+          </div>
+          <div className="text-center mt-12">
+            <LocalLink
+              href="/rooms"
+              className="inline-flex items-center justify-center px-5 py-2 border-2 border-primary-500 text-primary-500 font-semibold rounded-xl hover:bg-primary-500 hover:text-primary-foreground dark:hover:text-background transition-all duration-300 gap-2"
+            >
+              {t.viewAllRooms}
+              <ArrowRight className="w-4 h-4" />
+            </LocalLink>
           </div>
         </div>
       </section>
