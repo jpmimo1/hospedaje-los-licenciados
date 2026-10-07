@@ -6,6 +6,24 @@ import { DynamicIcon } from "@/components/DynamicIcon";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
+import { SectionHeading } from "@/components/SectionHeading";
+import { LocalLink } from "@/components/LocaleLink";
+import { ArrowRight } from "lucide-react";
+
+const dictionary = {
+  es: {
+    roomsTitle: "Encuentra tu habitación",
+    roomsDescription:
+      "Conoce nuestras opciones y elige la que mejor se adapte a tu estadía.",
+    viewRooms: "Ver habitaciones",
+  },
+  en: {
+    roomsTitle: "Find your room",
+    roomsDescription:
+      "Explore our options and choose the room that best suits your stay.",
+    viewRooms: "View rooms",
+  },
+};
 
 type Props = {
   params: Promise<{ locale: Locales }>;
@@ -14,6 +32,7 @@ type Props = {
 export default async function AboutPage({ params }: Props) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+  const t = dictionary[locale] || dictionary.es;
 
   const payload = await getPayload({ config: configPromise });
 
@@ -122,6 +141,18 @@ export default async function AboutPage({ params }: Props) {
           </div>
         </Container>
       )}
+      <Container width="content">
+        <section className="border-t border-border pt-12 md:pt-16 text-center">
+          <SectionHeading title={t.roomsTitle} description={t.roomsDescription} />
+          <LocalLink
+            href="/rooms"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-5 py-2 font-semibold text-foreground hover:bg-muted transition-colors"
+          >
+            {t.viewRooms}
+            <ArrowRight className="w-4 h-4 shrink-0" />
+          </LocalLink>
+        </section>
+      </Container>
     </div>
   );
 }

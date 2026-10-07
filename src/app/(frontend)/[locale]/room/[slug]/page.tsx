@@ -8,6 +8,7 @@ import {
   BedDouble,
   Maximize,
   CalendarCheck,
+  ArrowRight,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -18,6 +19,10 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import { RoomGallery } from "@/components/RoomGallery";
 import { Media } from "@/payload-types";
 import { bedLabels } from "@/data/bedLabels";
+import { Container } from "@/components/Container";
+import { SectionHeading } from "@/components/SectionHeading";
+import { RoomCard } from "@/components/RoomCard";
+import { selectAlternativeRooms } from "@/lib/select-alternative-rooms";
 
 const dictionaries = {
   es: {
@@ -34,6 +39,9 @@ const dictionaries = {
     bookingConditions: "Condiciones de reserva",
     viewAllPhotos: "Ver todas",
     photos: "Fotos",
+    otherRoomsTitle: "Otras habitaciones",
+    otherRoomsDescription: "Compara otras opciones para tu estadía.",
+    viewAllRooms: "Ver todas las habitaciones",
   },
   en: {
     back: "Back to Rooms",
@@ -49,6 +57,9 @@ const dictionaries = {
     bookingConditions: "Booking conditions",
     viewAllPhotos: "View all",
     photos: "Photos",
+    otherRoomsTitle: "Other rooms",
+    otherRoomsDescription: "Compare other options for your stay.",
+    viewAllRooms: "View all rooms",
   },
 };
 
@@ -78,6 +89,16 @@ export default async function RoomPage({ params }: Props) {
   const room = roomData.docs[0];
   if (!room) return notFound();
 
+  const { docs: candidates } = await payload.find({
+    collection: "rooms",
+    locale,
+    fallbackLocale: false,
+    where: { id: { not_equals: room.id } },
+    pagination: false,
+    depth: 1,
+  });
+  const alternativeRooms = selectAlternativeRooms(room, candidates);
+
   const t = dictionaries[locale as "es" | "en"] || dictionaries.es;
   const currentBedLabel =
     bedLabels[locale as "es" | "en"][
@@ -91,7 +112,7 @@ export default async function RoomPage({ params }: Props) {
   return (
     <div className="bg-background min-h-screen pb-24 md:pb-20">
       <RoomGallery images={room.gallery!} roomName={room.name} />
-      <div className="container mx-auto px-4 pt-8 max-w-6xl">
+      <Container width="content" className="pt-8">
         {/* Breadcrumb */}
         <LocalLink
           href="/#rooms"
@@ -306,7 +327,30 @@ export default async function RoomPage({ params }: Props) {
             </div>
           </div>
         </div>
-      </div>
+
+        {alternativeRooms.length > 0 && (
+          <section className="mt-16 md:mt-20">
+            <SectionHeading
+              title={t.otherRoomsTitle}
+              description={t.otherRoomsDescription}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {alternativeRooms.map((alternativeRoom) => (
+                <RoomCard key={alternativeRoom.id} room={alternativeRoom} locale={locale} />
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <LocalLink
+                href="/rooms"
+                className="inline-flex items-center gap-2 text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                {t.viewAllRooms}
+                <ArrowRight className="w-4 h-4 shrink-0" />
+              </LocalLink>
+            </div>
+          </section>
+        )}
+      </Container>
 
       <MobileBottomBar
         locale={locale as "es" | "en"}

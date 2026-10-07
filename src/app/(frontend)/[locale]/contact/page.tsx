@@ -1,11 +1,12 @@
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
 import { formatPeruvianPhone } from "@/lib/format-phone";
+import { LocalLink } from "@/components/LocaleLink";
 
 type Props = {
   params: Promise<{ locale: Locales }>;
@@ -27,6 +28,7 @@ const dictionary = {
     checkIn: "Check-in: 14:00 hrs",
     checkOut: "Check-out: 11:00 hrs",
     mapTitle: "Mapa de ubicación en Cusco",
+    viewRooms: "Ver habitaciones y tarifas",
   },
   en: {
     seoTitle: "Contact Us | Los Licenciados Cusco",
@@ -43,6 +45,7 @@ const dictionary = {
     checkIn: "Check-in: 2:00 PM",
     checkOut: "Check-out: 11:00 AM",
     mapTitle: "Location map in Cusco",
+    viewRooms: "View rooms and rates",
   },
 };
 
@@ -136,6 +139,13 @@ export default async function ContactPage({ params }: Props) {
                 </div>
               </div>
             </div>
+            <LocalLink
+              href="/rooms"
+              className="inline-flex items-center gap-2 text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+            >
+              {t.viewRooms}
+              <ArrowRight className="w-4 h-4 shrink-0" />
+            </LocalLink>
           </div>
 
           {/* Pass the locale to the form so it can translate its internal labels */}
