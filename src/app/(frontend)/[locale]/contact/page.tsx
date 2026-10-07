@@ -5,6 +5,7 @@ import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
 import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
+import { formatPeruvianPhone } from "@/lib/format-phone";
 
 type Props = {
   params: Promise<{ locale: Locales }>;
@@ -100,7 +101,7 @@ export default async function ContactPage({ params }: Props) {
                       {t.phoneTitle}
                     </h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      {contactSettings.phone}
+                      {formatPeruvianPhone(contactSettings.phone)}
                     </p>
                   </div>
                 </div>

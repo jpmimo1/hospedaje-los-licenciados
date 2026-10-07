@@ -3,11 +3,13 @@ import configPromise from "@payload-config";
 import { Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import { LocalLink } from "./LocaleLink";
+import { formatPeruvianPhone } from "@/lib/format-phone";
 
 const dictionary = {
   es: {
     usefulLinks: "Enlaces Útiles",
     home: "Inicio",
+    rooms: "Habitaciones",
     about: "Nosotros",
     contactTitle: "Contacto",
     contactLink: "Contacto",
@@ -21,6 +23,7 @@ const dictionary = {
   en: {
     usefulLinks: "Useful Links",
     home: "Home",
+    rooms: "Rooms",
     about: "About Us",
     contactTitle: "Contact Us",
     contactLink: "Contact",
@@ -73,7 +76,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
             <h3 className="font-serif text-2xl font-bold mb-1 text-foreground">
               Los Licenciados
             </h3>
-            <p className="text-muted-foreground text-sm lg:text-center">
+            <p className="text-footer-muted-foreground text-sm lg:text-center">
               {siteContent.footerDescription}
             </p>
           </div>
@@ -82,19 +85,27 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
         {/* Column 2: Useful Links */}
         <div>
           <h4 className="font-bold mb-4 text-foreground">{t.usefulLinks}</h4>
-          <ul className="space-y-3 text-muted-foreground text-sm">
+          <ul className="space-y-3 text-footer-muted-foreground text-sm">
             <li>
               <LocalLink
                 href="/"
-                className="hover:text-primary transition-colors"
+                className="hover:text-footer-link transition-colors"
               >
                 {t.home}
               </LocalLink>
             </li>
             <li>
               <LocalLink
+                href="/rooms"
+                className="hover:text-footer-link transition-colors"
+              >
+                {t.rooms}
+              </LocalLink>
+            </li>
+            <li>
+              <LocalLink
                 href="/about"
-                className="hover:text-primary transition-colors"
+                className="hover:text-footer-link transition-colors"
               >
                 {t.about}
               </LocalLink>
@@ -102,7 +113,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
             <li>
               <LocalLink
                 href="/contact"
-                className="hover:text-primary transition-colors"
+                className="hover:text-footer-link transition-colors"
               >
                 {t.contactLink}
               </LocalLink>
@@ -110,7 +121,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
             <li>
               <LocalLink
                 href="/policies"
-                className="hover:text-primary transition-colors"
+                className="hover:text-footer-link transition-colors"
               >
                 {t.policies}
               </LocalLink>
@@ -121,10 +132,10 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
         {/* Column 3: Contact */}
         <div>
           <h4 className="font-bold mb-4 text-foreground">{t.contactTitle}</h4>
-          <ul className="space-y-3 text-muted-foreground text-sm">
+          <ul className="space-y-3 text-footer-muted-foreground text-sm">
             <li className="flex items-center gap-3">
               <Phone className="w-4 h-4 text-primary shrink-0" />
-              <span>{contactSettings.phone}</span>
+              <span>{formatPeruvianPhone(contactSettings.phone)}</span>
             </li>
             <li className="flex items-center gap-3">
               <Mail className="w-4 h-4 text-primary shrink-0" />
@@ -136,7 +147,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
         {/* Column 4: Location */}
         <div>
           <h4 className="font-bold mb-4 text-foreground">{t.location}</h4>
-          <div className="flex items-start gap-3 text-muted-foreground text-sm mb-4">
+          <div className="flex items-start gap-3 text-footer-muted-foreground text-sm mb-4">
             <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
             <p>{contactSettings.address}</p>
           </div>
@@ -145,7 +156,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
               href={contactSettings.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 underline text-sm transition-colors inline-block ml-7"
+              className="text-footer-link hover:text-foreground underline text-sm transition-colors inline-block ml-7"
             >
               {t.viewMap}
             </a>
@@ -154,9 +165,9 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
       </div>
 
       {/* Copyright & Bottom Bars */}
-      <div className="container mx-auto px-4 border-t border-muted-foreground/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-muted-foreground text-sm">
+      <div className="container mx-auto px-4 border-t border-muted-foreground/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-footer-muted-foreground text-sm">
         <div className="flex gap-x-5 flex-wrap">
-          <p className="text-sm text-muted-foreground text-center md:text-left grow">
+          <p className="text-sm text-footer-muted-foreground text-center md:text-left grow">
             © {new Date().getFullYear()} Hospedaje Los Licenciados. {t.rights}
           </p>
 
@@ -164,13 +175,13 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
         </div>
 
         <div className="flex gap-4">
-          <p className="text-sm text-muted-foreground text-center md:text-right grow">
+          <p className="text-sm text-footer-muted-foreground text-center md:text-right grow">
             {t.developedBy}{" "}
             <a
               href="https://jeanpaulflores.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-foreground hover:text-primary transition-colors"
+              className="font-medium text-foreground hover:text-footer-link transition-colors"
             >
               Jean Paul Flores
             </a>
