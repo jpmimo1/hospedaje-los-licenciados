@@ -17,6 +17,7 @@ import { DynamicIcon } from "@/components/DynamicIcon";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { RoomGallery } from "@/components/RoomGallery";
 import { Media } from "@/payload-types";
+import { bedLabels } from "@/data/bedLabels";
 
 const dictionaries = {
   es: {
@@ -27,9 +28,10 @@ const dictionaries = {
     capacityLabel: "Capacidad",
     checkInLabel: "Check-in",
     checkOutLabel: "Check-out",
-    bookBtn: "Reservar ahora",
+    bookBtn: "Consultar disponibilidad",
     bookNote: "Serás redirigido a WhatsApp para confirmar disponibilidad.",
-    perNight: "/ noche",
+    priceBasis: "Por habitación y noche",
+    bookingConditions: "Condiciones de reserva",
     viewAllPhotos: "Ver todas",
     photos: "Fotos",
   },
@@ -41,28 +43,12 @@ const dictionaries = {
     capacityLabel: "Capacity",
     checkInLabel: "Check-in",
     checkOutLabel: "Check-out",
-    bookBtn: "Book Now",
+    bookBtn: "Check availability",
     bookNote: "You will be redirected to WhatsApp to confirm availability.",
-    perNight: "/ night",
+    priceBasis: "Per room, per night",
+    bookingConditions: "Booking conditions",
     viewAllPhotos: "View all",
     photos: "Photos",
-  },
-};
-
-const bedLabels = {
-  es: {
-    "1-single": "1 Cama Simple",
-    "1-double": "1 Cama Matrimonial",
-    "1-double-1-single": "1 Matrimonial + 1 Simple",
-    "2-singles": "2 Camas Simples",
-    "2-doubles": "2 Camas Matrimoniales",
-  },
-  en: {
-    "1-single": "1 Single Bed",
-    "1-double": "1 Double Bed",
-    "1-double-1-single": "1 Double + 1 Single Bed",
-    "2-singles": "2 Single Beds",
-    "2-doubles": "2 Double Beds",
   },
 };
 
@@ -184,9 +170,9 @@ export default async function RoomPage({ params }: Props) {
         {/* 2-Column Layout */}
         <div className="flex flex-col lg:flex-row gap-12 relative">
           {/* Left Column */}
-          <div className="lg:w-2/3">
+          <div className="lg:w-2/3 min-w-0">
             <div className="mb-8">
-              <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4 break-words">
                 {room.name}
               </h1>
               <div className="flex flex-wrap items-center gap-6 text-muted-foreground text-sm">
@@ -195,9 +181,9 @@ export default async function RoomPage({ params }: Props) {
                   {t.upTo} {room.capacity} {t.guests}
                 </div>
                 {room.bedConfiguration && (
-                  <div className="flex items-center gap-2">
-                    <BedDouble className="text-primary w-4 h-4" />
-                    {currentBedLabel}
+                  <div className="flex items-start gap-2 min-w-0">
+                    <BedDouble className="text-primary w-4 h-4 shrink-0 mt-0.5" />
+                    <span className="break-words">{currentBedLabel}</span>
                   </div>
                 )}
                 {room.roomSize ? (
@@ -241,20 +227,28 @@ export default async function RoomPage({ params }: Props) {
                 })}
               </div>
             </div>
+            <div className="lg:hidden text-sm text-muted-foreground space-y-3 mb-6">
+              <p>{t.priceBasis}</p>
+              <p>{t.bookNote}</p>
+              <LocalLink
+                href="/policies"
+                className="inline-block underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                {t.bookingConditions}
+              </LocalLink>
+            </div>
           </div>
 
           {/* Right Column (Sticky Widget) */}
-          <div className="lg:w-1/3 hidden lg:block">
-            <div className="sticky top-28 bg-card border border-border rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-none">
-              <div className="flex items-end justify-between mb-6">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-bold text-foreground">
-                    S/ {room.price}
-                  </span>
-                  <span className="text-sm font-medium text-muted-foreground">
-                    {t.perNight}
-                  </span>
-                </div>
+          <div className="lg:w-1/3 hidden lg:block min-w-0">
+            <div className="room-booking-card bg-card border border-border rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-none">
+              <div className="mb-6">
+                <p className="text-3xl font-bold text-foreground">
+                  S/ {room.price}
+                </p>
+                <p className="text-sm font-medium text-muted-foreground mt-1">
+                  {t.priceBasis}
+                </p>
               </div>
 
               <div className="bg-muted/20 border border-border rounded-xl p-4 mb-6 text-sm text-foreground">
@@ -292,15 +286,23 @@ export default async function RoomPage({ params }: Props) {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-primary-500 hover:bg-primary-600 text-primary-foreground font-bold py-3.5 rounded-xl shadow-md transition-all flex justify-center items-center gap-2 active:scale-95"
+                className="w-full bg-primary-500 hover:bg-primary-600 text-primary-foreground font-bold px-3 py-3.5 rounded-xl shadow-md transition-all flex justify-center items-center gap-2 text-center active:scale-95"
               >
-                <CalendarCheck className="w-5 h-5" />
+                <CalendarCheck className="w-5 h-5 shrink-0" />
                 {t.bookBtn}
               </a>
 
               <p className="text-center text-xs text-muted-foreground mt-4">
                 {t.bookNote}
               </p>
+              <div className="text-center mt-3">
+                <LocalLink
+                  href="/policies"
+                  className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+                >
+                  {t.bookingConditions}
+                </LocalLink>
+              </div>
             </div>
           </div>
         </div>

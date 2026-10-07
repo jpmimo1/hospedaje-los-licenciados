@@ -202,3 +202,19 @@
     padding-bottom: 7rem;
   }
 }
+
+/* Keep the whole booking card reachable on short screens and at high zoom. */
+@media (max-width: 1023px) {
+  body.has-mobile-room-bar footer {
+    padding-bottom: 7rem;
+  }
+}
+
+@media (min-width: 64rem) and (min-height: 44rem) {
+  .room-booking-card {
+    position: sticky;
+    top: 7rem;
+    max-height: calc(100dvh - 9rem);
+    overflow-y: auto;
+  }
+}

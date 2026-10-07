@@ -1,26 +1,29 @@
 import Image from "next/image";
-import { DynamicIcon } from "./DynamicIcon";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BedDouble, Users } from "lucide-react";
 import { LocalLink } from "./LocaleLink";
-import { Room } from "@/payload-types";
+import type { Room } from "@/payload-types";
+import { bedLabels } from "@/data/bedLabels";
 
 const dictionary = {
   es: {
-    from: "Desde",
-    perNight: "/ noche",
+    priceBasis: "Por habitación y noche",
+    upTo: "Hasta",
+    guest: "huésped",
+    guests: "huéspedes",
     viewDetails: "Ver detalles",
-    featured: "Destacado",
   },
   en: {
-    from: "From",
-    perNight: "/ night",
+    priceBasis: "Per room, per night",
+    upTo: "Up to",
+    guest: "guest",
+    guests: "guests",
     viewDetails: "View details",
-    featured: "Featured",
   },
 };
 
 export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
   const t = dictionary[locale] || dictionary.es;
+  const bedLabel = bedLabels[locale]?.[room.bedConfiguration];
 
   const firstGalleryItem = room.gallery?.[0]?.image;
   const imageUrl =
@@ -31,15 +34,15 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
   const url = `/room/${room.slug}`;
 
   return (
-    <div className="relative flex flex-col bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl transition-all duration-300 group">
+    <div className="relative flex flex-col h-full min-w-0 bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl transition-all duration-300 group">
       {/* Invisible link covering the entire card for better UX */}
       <LocalLink
         href={url}
         className="absolute inset-0 z-10"
-        aria-label={`Ver detalles de ${room.name}`}
+        aria-label={`${t.viewDetails}: ${room.name}`}
       />
 
-      <div className="relative h-64 overflow-hidden bg-muted">
+      <div className="relative h-64 shrink-0 overflow-hidden bg-muted">
         {imageUrl && (
           <Image
             src={imageUrl}
@@ -49,71 +52,49 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         )}
-
-        {/* Optional label (if you have a 'featured' field or similar) */}
-        {/* {room.featured && (
-          <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm px-3 py-1 text-xs font-bold uppercase tracking-wider text-foreground rounded-md z-20 shadow-sm">
-            {t.featured}
-          </div>
-        )} */}
       </div>
 
-      <div className="p-6 flex flex-col grow">
-        <h3 className="font-serif text-2xl font-bold text-foreground mb-3 group-hover:text-primary-500 transition-colors">
+      <div className="p-6 flex flex-col grow min-w-0">
+        <h3 className="font-serif text-2xl font-bold text-foreground mb-4 break-words">
           {room.name}
         </h3>
 
-        {/* Dynamic amenities (Max 3 to maintain layout consistency) */}
-        {room.amenities && room.amenities.length > 0 && (
-          <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground mb-4">
-            {room.amenities.slice(0, 3).map((amenity) => {
-              if (typeof amenity === "number") {
-                return null;
-              }
-              return (
-                <div key={amenity.id} className="flex items-center gap-1.5">
-                  <DynamicIcon
-                    name={amenity.icon || ""}
-                    className="w-4 h-4 text-primary"
-                  />
-                  <span className="truncate max-w-30">
-                    {typeof amenity === "object" ? amenity.name : ""}
-                  </span>
-                </div>
-              );
-            })}
-            {room.amenities.length > 3 && (
-              <span className="text-xs font-medium bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">
-                +{room.amenities.length - 3}
+        <ul className="space-y-2 text-sm text-foreground mb-4">
+          {room.capacity != null && room.capacity > 0 && (
+            <li className="flex items-start gap-2">
+              <Users aria-hidden="true" className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+              <span>
+                {t.upTo} {room.capacity} {room.capacity === 1 ? t.guest : t.guests}
               </span>
-            )}
-          </div>
-        )}
+            </li>
+          )}
+          {bedLabel && (
+            <li className="flex items-start gap-2">
+              <BedDouble aria-hidden="true" className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+              <span className="min-w-0 break-words">{bedLabel}</span>
+            </li>
+          )}
+        </ul>
 
         {room.shortDescription && (
-          <p className="text-muted-foreground text-sm line-clamp-2 mb-6">
+          <p className="text-muted-foreground text-sm leading-relaxed break-words mb-6">
             {room.shortDescription}
           </p>
         )}
 
-        <div className="mt-auto flex items-end justify-between pt-5 border-t border-border">
+        <div className="mt-auto flex flex-col gap-4 pt-5 border-t border-border">
           <div>
-            <p className="text-xs text-muted-foreground uppercase font-bold mb-0.5">
-              {t.from || "Desde"}
+            <p className="text-2xl font-bold text-foreground">
+              S/ {room.price}
             </p>
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold text-foreground">
-                S/ {room.price}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {t.perNight || "/ noche"}
-              </span>
-            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              {t.priceBasis}
+            </p>
           </div>
 
           {/* Virtual button (visual only, the invisible link handles navigation) */}
-          <div className="relative z-20 bg-primary-500 text-primary-foreground px-5 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 pointer-events-none group-hover:bg-primary-600">
-            {t.viewDetails || "Ver detalles"}
+          <div className="relative z-20 bg-primary-500 text-primary-foreground px-5 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 pointer-events-none group-hover:bg-primary-600">
+            {t.viewDetails}
             <ArrowRight className="w-4 h-4" />
           </div>
         </div>
