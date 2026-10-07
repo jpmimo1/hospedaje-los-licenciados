@@ -17,6 +17,7 @@ import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { DynamicIcon } from "@/components/DynamicIcon";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { RoomGallery } from "@/components/RoomGallery";
+import { RoomGalleryLink } from "@/components/RoomGalleryLink";
 import { Media } from "@/payload-types";
 import { bedLabels } from "@/data/bedLabels";
 import { Container } from "@/components/Container";
@@ -111,7 +112,7 @@ export default async function RoomPage({ params }: Props) {
 
   return (
     <div className="bg-background min-h-screen pb-24 md:pb-20">
-      <RoomGallery images={room.gallery!} roomName={room.name} />
+      <RoomGallery images={room.gallery} roomName={room.name} locale={locale} />
       <Container width="content" className="pt-8">
         {/* Breadcrumb */}
         <LocalLink
@@ -126,8 +127,9 @@ export default async function RoomPage({ params }: Props) {
         {room.gallery && room.gallery.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-75 md:h-112.5 mb-10 rounded-2xl overflow-hidden">
             <div className="md:col-span-3 bg-muted relative group cursor-pointer overflow-hidden h-full">
-              <LocalLink
+              <RoomGalleryLink
                 href={`/room/${slug}?showGallery=true`}
+                aria-label={`${t.viewAllPhotos}: ${room.name}`}
                 className="md:col-span-3 bg-muted relative group cursor-pointer scroll-smooth block h-full"
               >
                 <Image
@@ -145,13 +147,14 @@ export default async function RoomPage({ params }: Props) {
                 <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-bold text-foreground shadow-sm md:hidden">
                   1 / {room.gallery.length} {t.photos}
                 </div>
-              </LocalLink>
+              </RoomGalleryLink>
             </div>
 
             <div className="hidden md:flex flex-col gap-3 h-full">
               {room.gallery[1] && (
-                <LocalLink
+                <RoomGalleryLink
                   href={`/room/${slug}?showGallery=true`}
+                  aria-label={`${t.viewAllPhotos}: ${room.name}`}
                   className="bg-muted flex-1 relative overflow-hidden group cursor-pointer"
                 >
                   <Image
@@ -161,11 +164,12 @@ export default async function RoomPage({ params }: Props) {
                     sizes="(max-width: 768px) 100vw, 25vw"
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                </LocalLink>
+                </RoomGalleryLink>
               )}
               {room.gallery[2] && (
-                <LocalLink
+                <RoomGalleryLink
                   href={`/room/${slug}?showGallery=true`}
+                  aria-label={`${t.viewAllPhotos}: ${room.name}`}
                   className="bg-muted flex-1 relative overflow-hidden group cursor-pointer"
                 >
                   <Image
@@ -182,7 +186,7 @@ export default async function RoomPage({ params }: Props) {
                       {t.viewAllPhotos}
                     </span>
                   </div>
-                </LocalLink>
+                </RoomGalleryLink>
               )}
             </div>
           </div>
