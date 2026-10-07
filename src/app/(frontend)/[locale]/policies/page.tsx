@@ -5,6 +5,8 @@ import { DynamicIcon } from "@/components/DynamicIcon";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site-url";
+import { Container } from "@/components/Container";
+import { PageIntro } from "@/components/PageIntro";
 
 type TLocale = "es" | "en";
 
@@ -94,22 +96,13 @@ export default async function PoliciesPage({
   });
 
   return (
-    <div className="bg-background min-h-screen py-20">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-16">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
-            {t.title}
-          </h1>
-
-          <p className="text-muted-foreground text-lg">
-            {t.subtitle}
-          </p>
-
-          <p className="text-muted-foreground text-sm mt-3">
-            {t.reference}
-          </p>
-        </div>
-
+    <div className="bg-background min-h-screen pb-20">
+      <PageIntro
+        title={t.title}
+        description={t.subtitle}
+        note={<p>{t.reference}</p>}
+      />
+      <Container width="narrow">
         {policies.length === 0 ? (
           <p className="text-center text-muted-foreground">
             {t.empty}
@@ -150,7 +143,7 @@ export default async function PoliciesPage({
             ))}
           </div>
         )}
-      </div>
+      </Container>
     </div>
   );
 }

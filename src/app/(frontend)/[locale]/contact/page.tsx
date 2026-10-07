@@ -3,6 +3,8 @@ import configPromise from "@payload-config";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import type { Metadata } from "next";
+import { Container } from "@/components/Container";
+import { PageIntro } from "@/components/PageIntro";
 
 type Props = {
   params: Promise<{ locale: Locales }>;
@@ -65,17 +67,9 @@ export default async function ContactPage({ params }: Props) {
   });
 
   return (
-    <div className="bg-background min-h-screen pt-12 pb-20">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-16">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
-            {t.title}
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {t.subtitle}
-          </p>
-        </div>
-
+    <div className="bg-background min-h-screen pb-20">
+      <PageIntro title={t.title} description={t.subtitle} />
+      <Container width="content">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20 items-start">
           <div className="space-y-8 lg:mt-5">
             <div>
@@ -159,7 +153,7 @@ export default async function ContactPage({ params }: Props) {
             title={t.mapTitle}
           ></iframe>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

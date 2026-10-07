@@ -4,6 +4,8 @@ import { getPayload } from "payload";
 import configPromise from "@payload-config";
 import { RoomCard } from "@/components/RoomCard";
 import { SITE_URL } from "@/lib/site-url";
+import { Container } from "@/components/Container";
+import { PageIntro } from "@/components/PageIntro";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -63,17 +65,9 @@ export default async function RoomsPage({ params }: Props) {
   });
 
   return (
-    <div className="bg-muted min-h-screen py-20">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
-            {t.title}
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-4xl mx-auto">
-            {t.description}
-          </p>
-        </div>
-
+    <div className="bg-muted min-h-screen pb-20">
+      <PageIntro title={t.title} description={t.description} />
+      <Container>
         {rooms.length === 0 ? (
           <p className="text-center text-muted-foreground">{t.empty}</p>
         ) : (
@@ -83,7 +77,7 @@ export default async function RoomsPage({ params }: Props) {
             ))}
           </div>
         )}
-      </div>
+      </Container>
     </div>
   );
 }

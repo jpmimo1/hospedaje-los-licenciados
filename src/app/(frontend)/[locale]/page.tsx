@@ -7,6 +7,9 @@ import { DynamicIcon } from "@/components/DynamicIcon";
 import { LocalLink } from "@/components/LocaleLink";
 import { RoomCard } from "@/components/RoomCard";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
+import { Container } from "@/components/Container";
+import { SectionHeading } from "@/components/SectionHeading";
+import { presentationSpacing } from "@/lib/presentation-spacing";
 
 const dictionary = {
   es: {
@@ -116,16 +119,12 @@ export default async function HomePage({
       {/* ================= GENERAL AMENITIES ================= */}
       {siteContent.generalAmenities &&
         siteContent.generalAmenities.length > 0 && (
-          <section className="py-16 bg-muted/30 dark:bg-muted/10 border-y border-border/50">
-            <div className="container mx-auto px-4">
-              <div className="text-center mb-12">
-                <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  {t.amenitiesTitle}
-                </h2>
-                <p className="text-muted-foreground max-w-4xl mx-auto">
-                  {t.amenitiesSubtitle}
-                </p>
-              </div>
+          <section className={`${presentationSpacing.section} bg-muted/30 dark:bg-muted/10 border-y border-border/50`}>
+            <Container>
+              <SectionHeading
+                title={t.amenitiesTitle}
+                description={t.amenitiesSubtitle}
+              />
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 {siteContent.generalAmenities.map((amenity) => {
@@ -149,22 +148,18 @@ export default async function HomePage({
                   );
                 })}
               </div>
-            </div>
+            </Container>
           </section>
         )}
 
       {/* ================= ROOMS SECTION ================= */}
-      <section className="py-18.75 bg-muted relative border-b border-border/50">
+      <section className={`${presentationSpacing.section} bg-muted relative border-b border-border/50`}>
         <div id="rooms" className="absolute -top-18.75" />
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {t.roomsTitle}
-            </h2>
-            <p className="text-muted-foreground max-w-4xl mx-auto">
-              {t.roomsSubtitle}
-            </p>
-          </div>
+        <Container>
+          <SectionHeading
+            title={t.roomsTitle}
+            description={t.roomsSubtitle}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {roomsData.docs.map((room) => {
@@ -180,15 +175,14 @@ export default async function HomePage({
               <ArrowRight className="w-4 h-4" />
             </LocalLink>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ================= ABOUT SECTION ================= */}
-      <section className="py-24 bg-muted/30 relative">
+      <section className={`${presentationSpacing.section} bg-muted/30 relative`}>
         <div id="about" className="absolute -top-18.75" />
 
-        {/* Constrain width to max-w-6xl to match layout consistency across pages */}
-        <div className="container mx-auto px-4">
+        <Container>
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div className="w-full lg:w-1/2 relative group">
               <div className="relative h-75 md:h-112.5 rounded-2xl overflow-hidden shadow-lg">
@@ -208,13 +202,7 @@ export default async function HomePage({
             </div>
 
             <div className="w-full lg:w-1/2">
-              <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 block">
-                {t.aboutUsTitle}
-              </span>
-
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6 leading-tight">
-                {siteContent.aboutTitle}
-              </h2>
+              <SectionHeading title={siteContent.aboutTitle} align="left" />
 
               <div className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground text-lg leading-relaxed mb-10">
                 {siteContent.aboutText ? (
@@ -233,7 +221,7 @@ export default async function HomePage({
               </LocalLink>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
       <MobileBottomBar
         locale={locale}

@@ -4,17 +4,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { DynamicIcon } from "@/components/DynamicIcon";
 import { RichText } from "@payloadcms/richtext-lexical/react";
-
-const dictionaries = {
-  es: {
-    eyebrow: "Sobre Nosotros",
-    fallbackText: "Cargando historia...",
-  },
-  en: {
-    eyebrow: "About Us",
-    fallbackText: "Loading history...",
-  },
-};
+import { Container } from "@/components/Container";
+import { PageIntro } from "@/components/PageIntro";
 
 type Props = {
   params: Promise<{ locale: Locales }>;
@@ -33,8 +24,6 @@ export default async function AboutPage({ params }: Props) {
 
   if (!aboutData) return notFound();
 
-  const t = dictionaries[locale as "es" | "en"] || dictionaries.es;
-
   const mainImageUrl =
     aboutData.mainImage && typeof aboutData.mainImage !== "number"
       ? aboutData.mainImage.url
@@ -45,19 +34,12 @@ export default async function AboutPage({ params }: Props) {
       {/* =========================================================
           1. HERO SECTION
          ========================================================= */}
-      <div className="max-w-4xl mx-auto text-center pt-20 pb-16 px-4">
-        <span className="text-primary font-bold tracking-widest uppercase text-xs mb-4 block animate-fade-in">
-          {t.eyebrow}
-        </span>
-        <h1 className="font-serif text-4xl md:text-5xl text-foreground font-bold mb-6 leading-tight">
-          {aboutData.title}
-        </h1>
-      </div>
+      <PageIntro title={aboutData.title} />
 
       {/* =========================================================
           2. HISTORY
          ========================================================= */}
-      <div className="max-w-6xl mx-auto px-4 mb-24">
+      <Container width="content" className="mb-24">
         <div className="flex flex-col lg:flex-row gap-16 items-center">
           <div className="w-full lg:w-1/2 relative aspect-4/3 md:aspect-video lg:aspect-4/3">
             <div className="absolute -bottom-4 -left-4 w-full h-full bg-primary/10 rounded-2xl -z-10 hidden md:block"></div>
@@ -84,17 +66,17 @@ export default async function AboutPage({ params }: Props) {
             </div>
           </div>
         </div>
-      </div>
+      </Container>
 
       {/* =========================================================
           3. METRICS
          ========================================================= */}
       {aboutData.metrics && aboutData.metrics.length > 0 && (
         <div className="border-y border-border bg-card shadow-sm">
-          <div className="max-w-6xl mx-auto px-4 py-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center  md:divide-x divide-border">
+          <Container width="content" className="py-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 text-center divide-y md:divide-y-0 md:divide-x divide-border">
               {aboutData.metrics.map((metric) => (
-                <div key={metric.id}>
+                <div key={metric.id} className="min-w-0 break-words py-6 md:py-0 md:px-6">
                   <div className="text-4xl font-serif text-primary font-bold mb-1">
                     {metric.value}
                   </div>
@@ -104,7 +86,7 @@ export default async function AboutPage({ params }: Props) {
                 </div>
               ))}
             </div>
-          </div>
+          </Container>
         </div>
       )}
 
@@ -112,13 +94,13 @@ export default async function AboutPage({ params }: Props) {
           4. MISSION, VISION & VALUES
          ========================================================= */}
       {aboutData.missionVision && aboutData.missionVision.length > 0 && (
-        <div className="max-w-6xl mx-auto px-4 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-start">
+        <Container width="content" className="py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             {aboutData.missionVision.map((block) => {
               return (
                 <div
                   key={block.id}
-                  className="bg-card p-8 md:p-10 rounded-3xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.02)] flex flex-col h-full"
+                  className="bg-card p-8 md:p-10 rounded-3xl border border-border shadow-[0_4px_20px_rgb(0,0,0,0.02)] flex flex-col h-full min-w-0 break-words"
                 >
                   <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 transition-transform ">
                     <DynamicIcon
@@ -127,9 +109,9 @@ export default async function AboutPage({ params }: Props) {
                     />
                   </div>
 
-                  <h3 className="font-serif text-xl text-foreground font-bold mb-3">
+                  <h2 className="font-serif text-xl text-foreground font-bold mb-3">
                     {block.title}
-                  </h3>
+                  </h2>
 
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     {block.description}
@@ -138,7 +120,7 @@ export default async function AboutPage({ params }: Props) {
               );
             })}
           </div>
-        </div>
+        </Container>
       )}
     </div>
   );
