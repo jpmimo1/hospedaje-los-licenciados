@@ -21,8 +21,8 @@ test("includes the ten public pages with reciprocal language alternatives and no
 
 test("pairs localized slugs by ID rather than position or a matching slug", () => {
   const entries = buildSitemap(origin, {
-    es: [{ id: 1, slug: "doble", updatedAt }, { id: 2, slug: "simple", updatedAt }],
-    en: [{ id: 2, slug: "single", updatedAt }, { id: 1, slug: "two-bed", updatedAt }],
+    es: [{ name: "Localized room", id: 1, slug: "doble", updatedAt }, { name: "Localized room", id: 2, slug: "simple", updatedAt }],
+    en: [{ name: "Localized room", id: 2, slug: "single", updatedAt }, { name: "Localized room", id: 1, slug: "two-bed", updatedAt }],
   });
   const languages = { es: `${origin}/es/room/doble`, en: `${origin}/en/room/two-bed` };
   for (const url of Object.values(languages)) {
@@ -34,8 +34,8 @@ test("pairs localized slugs by ID rather than position or a matching slug", () =
 
 test("keeps a room with one translation without inventing a counterpart or timestamp", () => {
   const entries = buildSitemap(origin, {
-    es: [{ id: 1, slug: "solo-es", updatedAt: "invalid" }],
-    en: [{ id: 1, slug: "" }, { id: 2, slug: "only-en" }],
+    es: [{ name: "Localized room", id: 1, slug: "solo-es", updatedAt: "invalid" }],
+    en: [{ name: "Localized room", id: 1, slug: "" }, { name: "Localized room", id: 2, slug: "only-en" }],
   });
   assert.equal(entries.length, 12);
   assert.deepEqual(entries[10].alternates?.languages, { es: `${origin}/es/room/solo-es` });
@@ -48,12 +48,12 @@ test("excludes unsafe slugs and duplicate IDs or URLs, and encodes real unicode 
   const invalid = ["", " ", ".", "..", "a/b", "a\\b", "a?gallery=true", "a#photo", "a%2Fb", "a b"];
   const entries = buildSitemap(origin, {
     es: [
-      ...invalid.map((slug, id) => ({ id, slug })),
-      { id: 20, slug: "habitación-familiar" },
-      { id: 20, slug: "another-slug" },
-      { id: 21, slug: "habitación-familiar" },
+      ...invalid.map((slug, id) => ({ name: "Localized room", id, slug })),
+      { name: "Localized room", id: 20, slug: "habitación-familiar" },
+      { name: "Localized room", id: 20, slug: "another-slug" },
+      { name: "Localized room", id: 21, slug: "habitación-familiar" },
     ],
-    en: [{ id: 20, slug: "family-room" }, { id: 21, slug: "other-room" }],
+    en: [{ name: "Localized room", id: 20, slug: "family-room" }, { name: "Localized room", id: 21, slug: "other-room" }],
   });
   assert.equal(entries.length, 13);
   assert.equal(new Set(entries.map(({ url }) => url)).size, entries.length);

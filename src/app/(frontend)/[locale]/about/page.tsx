@@ -10,6 +10,8 @@ import { PageIntro } from "@/components/PageIntro";
 import { SectionHeading } from "@/components/SectionHeading";
 import { LocalLink } from "@/components/LocaleLink";
 import { ArrowRight } from "lucide-react";
+import { pageAlternates } from "@/lib/seo-urls";
+import { SITE_URL } from "@/lib/site-url";
 
 const dictionary = {
   es: {
@@ -40,7 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = dictionary[locale] || dictionary.es;
 
-  return { title: t.seoTitle, description: t.seoDescription };
+  return {
+    title: t.seoTitle,
+    description: t.seoDescription,
+    alternates: pageAlternates(SITE_URL, locale, "/about"),
+  };
 }
 
 export default async function AboutPage({ params }: Props) {

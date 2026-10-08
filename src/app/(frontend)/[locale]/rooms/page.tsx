@@ -6,6 +6,7 @@ import { RoomCard } from "@/components/RoomCard";
 import { SITE_URL } from "@/lib/site-url";
 import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
+import { pageAlternates } from "@/lib/seo-urls";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -42,13 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${t.title} | Los Licenciados Cusco`,
     description: t.description,
-    alternates: {
-      canonical: `${SITE_URL}/${locale}/rooms`,
-      languages: {
-        es: `${SITE_URL}/es/rooms`,
-        en: `${SITE_URL}/en/rooms`,
-      },
-    },
+    alternates: pageAlternates(SITE_URL, locale, "/rooms"),
   };
 }
 

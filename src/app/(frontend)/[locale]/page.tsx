@@ -13,6 +13,8 @@ import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { Container } from "@/components/Container";
 import { SectionHeading } from "@/components/SectionHeading";
 import { presentationSpacing } from "@/lib/presentation-spacing";
+import { pageAlternates } from "@/lib/seo-urls";
+import { SITE_URL } from "@/lib/site-url";
 
 const dictionary = {
   es: {
@@ -71,7 +73,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = dictionary[locale] || dictionary.es;
 
-  return { title: t.seoTitle, description: t.seoDescription };
+  return {
+    title: t.seoTitle,
+    description: t.seoDescription,
+    alternates: pageAlternates(SITE_URL, locale, ""),
+  };
 }
 
 export default async function HomePage({

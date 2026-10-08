@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site-url";
 import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
+import { pageAlternates } from "@/lib/seo-urls";
 
 type TLocale = "es" | "en";
 
@@ -69,13 +70,7 @@ export async function generateMetadata({
   return {
     title: t.seoTitle,
     description: t.seoDesc,
-    alternates: {
-      canonical: `${SITE_URL}/${locale}/policies`,
-      languages: {
-        es: `${SITE_URL}/es/policies`,
-        en: `${SITE_URL}/en/policies`,
-      },
-    }
+    alternates: pageAlternates(SITE_URL, locale, "/policies"),
   };
 }
 

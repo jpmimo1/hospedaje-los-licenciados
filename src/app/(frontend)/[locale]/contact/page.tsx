@@ -7,6 +7,8 @@ import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
 import { formatPeruvianPhone } from "@/lib/format-phone";
 import { LocalLink } from "@/components/LocaleLink";
+import { pageAlternates } from "@/lib/seo-urls";
+import { SITE_URL } from "@/lib/site-url";
 
 type Props = {
   params: Promise<{ locale: Locales }>;
@@ -56,6 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t.seoTitle,
     description: t.seoDesc,
+    alternates: pageAlternates(SITE_URL, locale, "/contact"),
   };
 }
 

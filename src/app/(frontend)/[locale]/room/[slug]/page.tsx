@@ -28,6 +28,9 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { RoomCard } from "@/components/RoomCard";
 import { selectAlternativeRooms } from "@/lib/select-alternative-rooms";
 import { buildRoomMetadata } from "@/lib/room-metadata";
+import { getPublicRoomTranslations } from "@/lib/get-public-room-translations";
+import { isValidRoomTranslation, roomLanguages, roomVersionsById } from "@/lib/seo-urls";
+import { SITE_URL } from "@/lib/site-url";
 
 const dictionaries = {
   es: {
@@ -86,7 +89,7 @@ const getRoom = cache(async (locale: Locales, slug: string) => {
   });
 
   const room = docs[0];
-  if (!room || typeof room.name !== "string" || !room.name.trim()) notFound();
+  if (!room || !isValidRoomTranslation(room)) notFound();
   return room;
 });
 
@@ -94,7 +97,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const room = await getRoom(locale, slug);
 
-  return buildRoomMetadata(room, locale);
+  const translations = await getPublicRoomTranslations(room.id);
+  const versions = roomVersionsById(SITE_URL, translations).get(room.id);
+  const currentVersion = versions?.[locale];
+  if (!versions || !currentVersion) notFound();
+
+  return {
+    ...buildRoomMetadata(room, locale),
+    alternates: {
+      canonical: currentVersion.url,
+      languages: roomLanguages(versions),
+    },
+  };
 }
 
 export default async function RoomPage({ params }: Props) {
