@@ -1,7 +1,9 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { SiWhatsapp } from "@icons-pack/react-simple-icons";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { DynamicIcon } from "@/components/DynamicIcon";
 import { LocalLink } from "@/components/LocaleLink";
@@ -13,7 +15,8 @@ import { presentationSpacing } from "@/lib/presentation-spacing";
 
 const dictionary = {
   es: {
-    heroButton: "Ver Habitaciones",
+    heroButton: "Ver habitaciones",
+    heroWhatsApp: "Consultar por WhatsApp",
     amenitiesTitle: "Nuestros servicios",
     amenitiesSubtitle: "Lo esencial para una estadía cómoda.",
     roomsTitle: "Nuestras Habitaciones",
@@ -30,7 +33,8 @@ const dictionary = {
     readFullStory: "Conócenos",
   },
   en: {
-    heroButton: "View Rooms",
+    heroButton: "View rooms",
+    heroWhatsApp: "Contact us on WhatsApp",
     amenitiesTitle: "Our amenities",
     amenitiesSubtitle: "The essentials for a comfortable stay.",
     roomsTitle: "Our Rooms",
@@ -59,7 +63,7 @@ export default async function HomePage({
 
   const payload = await getPayload({ config: configPromise });
 
-  const [siteContent, roomsData, cheapestRoomData] = await Promise.all([
+  const [siteContent, roomsData, cheapestRoomData, contactSettings] = await Promise.all([
     payload.findGlobal({
       slug: "site-content",
       locale: locale,
@@ -75,7 +79,36 @@ export default async function HomePage({
       sort: "price",
       limit: 1,
     }),
+    payload.findGlobal({
+      slug: "contact-settings",
+      locale,
+    }),
   ]);
+
+  const heroImage =
+    siteContent.heroImage && typeof siteContent.heroImage === "object"
+      ? siteContent.heroImage
+      : null;
+  const heroRatio =
+    heroImage?.width && heroImage.height &&
+    Number.isFinite(heroImage.width) && Number.isFinite(heroImage.height) &&
+    heroImage.width > 0 && heroImage.height > 0
+      ? heroImage.width / heroImage.height
+      : 4 / 3;
+  const heroImageStyle = {
+    "--hero-mobile-ratio": Math.min(16 / 9, Math.max(3 / 2, heroRatio)),
+    "--hero-desktop-ratio": Math.min(16 / 9, Math.max(4 / 3, heroRatio)),
+  } as CSSProperties;
+  const focalPosition = (value?: number | null) =>
+    typeof value === "number" && Number.isFinite(value)
+      ? Math.min(100, Math.max(0, value))
+      : 50;
+
+  const phone = contactSettings.phone || "";
+  const message = encodeURIComponent(
+    contactSettings.defaultMessage || "Hola, deseo información.",
+  );
+  const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
 
   const lowestPrice = cheapestRoomData.docs[0]?.price
     ? `S/ ${cheapestRoomData.docs[0].price}`
@@ -84,36 +117,59 @@ export default async function HomePage({
   return (
     <div className="flex flex-col min-h-screen">
       {/* ================= HERO SECTION ================= */}
-      <section className="relative h-[80vh] min-h-150 flex items-center justify-center">
+      <section className="relative bg-background py-10 sm:py-12 lg:py-16">
         <div id="home" className="absolute -top-18.75" />
-        {siteContent.heroImage && typeof siteContent.heroImage === "object" && (
-          <Image
-            src={siteContent.heroImage.url || ""}
-            alt={siteContent.heroImage.alt || "Hospedaje Los Licenciados Cusco"}
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-        )}
-        <div className="absolute inset-0 bg-black/40 z-10" />
+        <Container>
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,9fr)_minmax(0,11fr)] lg:gap-10 xl:gap-12">
+            <div className="min-w-0">
+              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground mb-5 leading-tight break-words">
+                {siteContent.heroTitle}
+              </h1>
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mb-6 lg:mb-8 break-words">
+                {siteContent.heroSubtitle}
+              </p>
 
-        <div className="relative z-20 text-center text-white px-4 max-w-3xl mx-auto">
-          <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            {siteContent.heroTitle}
-          </h1>
-          <p className="text-lg md:text-xl mb-8 text-white/90 font-sans">
-            {siteContent.heroSubtitle}
-          </p>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                <LocalLink
+                  href="/rooms"
+                  className="inline-flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-background px-5 py-3 rounded-lg font-medium text-sm text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                >
+                  {t.heroButton}
+                  <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                </LocalLink>
+                <LocalLink
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 border border-border bg-card hover:bg-muted text-foreground px-5 py-3 rounded-lg font-medium text-sm text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                >
+                  {t.heroWhatsApp}
+                  <SiWhatsapp className="w-4 h-4 shrink-0" aria-hidden="true" focusable="false" />
+                </LocalLink>
+              </div>
+            </div>
 
-          <LocalLink
-            href="#rooms"
-            className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-          >
-            {t.heroButton}
-            <ChevronDown className="w-5 h-5" />
-          </LocalLink>
-        </div>
+            <div
+              className="relative min-w-0 aspect-[var(--hero-mobile-ratio)] lg:aspect-[var(--hero-desktop-ratio)] rounded-2xl overflow-hidden bg-muted shadow-sm"
+              style={heroImageStyle}
+            >
+              {heroImage?.url && (
+                <Image
+                  src={heroImage.url}
+                  alt={heroImage.alt || "Hospedaje Los Licenciados Cusco"}
+                  fill
+                  className="object-contain"
+                  style={{
+                    objectPosition: `${focalPosition(heroImage.focalX)}% ${focalPosition(heroImage.focalY)}%`,
+                  }}
+                  loading="eager"
+                  fetchPriority="high"
+                  sizes="(min-width: 1536px) 801px, (min-width: 1280px) 660px, (min-width: 1024px) 524px, (min-width: 768px) 736px, (min-width: 640px) 608px, calc(100vw - 32px)"
+                />
+              )}
+            </div>
+          </div>
+        </Container>
       </section>
 
       {/* ================= GENERAL AMENITIES ================= */}

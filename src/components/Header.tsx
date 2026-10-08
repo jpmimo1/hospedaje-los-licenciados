@@ -89,7 +89,7 @@ export async function Header({ locale }: { locale: "es" | "en" }) {
   return (
     <header className="sticky top-0 z-50 w-full bg-card border-b border-border shadow-sm h-16 md:h-18.75">
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
-        <LocalLink href="/#home" className="flex items-center gap-3 sm:gap-5">
+        <LocalLink href="/#home" className="flex items-center gap-2 sm:gap-5">
           <Image
             src="/logo.svg"
             alt="Los Licenciados Logo"
@@ -106,7 +106,7 @@ export async function Header({ locale }: { locale: "es" | "en" }) {
             style={{ width: "auto" }}
             className="w-auto h-8 md:h-10 hidden dark:block"
           />
-          <span className="font-serif hidden sm:block sm:text-xl xl:text-3xl mt-2 font-medium text-foreground leading-none">
+          <span className="font-serif text-base sm:text-xl xl:text-3xl mt-1 sm:mt-2 font-medium text-foreground leading-none whitespace-nowrap">
             Los Licenciados
           </span>
         </LocalLink>
