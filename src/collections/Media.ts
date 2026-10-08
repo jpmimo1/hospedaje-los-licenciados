@@ -2,7 +2,9 @@ import type { CollectionConfig } from "payload";
 
 export const Media: CollectionConfig = {
   slug: "media",
-  upload: true,
+  upload: {
+    focalPoint: true,
+  },
   access: {
     read: () => true,
   },

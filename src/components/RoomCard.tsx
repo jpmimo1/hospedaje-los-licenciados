@@ -57,12 +57,12 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
         )}
       </div>
 
-      <div className="p-6 flex flex-col grow min-w-0">
-        <h3 className="font-serif text-2xl font-bold text-foreground mb-4 break-words">
+      <div className="@container p-5 flex flex-col grow min-w-0">
+        <h3 className="font-serif text-2xl font-bold text-foreground mb-3 break-words">
           {room.name}
         </h3>
 
-        <ul className="space-y-2 text-sm text-foreground mb-4">
+        <ul className="space-y-1.5 text-sm text-foreground mb-3">
           {room.capacity != null && room.capacity > 0 && (
             <li className="flex items-start gap-2">
               <Users aria-hidden="true" className="w-4 h-4 mt-0.5 text-primary shrink-0" />
@@ -83,15 +83,9 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
           </li>
         </ul>
 
-        {room.shortDescription && (
-          <p className="text-muted-foreground text-sm leading-relaxed break-words mb-6">
-            {room.shortDescription}
-          </p>
-        )}
-
-        <div className="mt-auto flex flex-col gap-4 pt-5 border-t border-border">
-          <div>
-            <p className="text-2xl font-bold text-foreground">
+        <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-border @min-[20rem]:flex-row @min-[20rem]:items-center">
+          <div className="min-w-0 @min-[20rem]:flex-1">
+            <p className="text-2xl font-bold text-foreground break-words">
               S/ {room.price}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
@@ -100,9 +94,9 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
           </div>
 
           {/* Virtual button (visual only, the invisible link handles navigation) */}
-          <div className="relative z-20 bg-primary-500 text-primary-foreground px-5 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 pointer-events-none group-hover:bg-primary-600">
+          <div className="relative z-20 bg-primary-500 text-primary-foreground px-4 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 min-h-11 w-full @min-[20rem]:w-auto shrink-0 text-center pointer-events-none group-hover:bg-primary-600">
             {t.viewDetails}
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 shrink-0" />
           </div>
         </div>
       </div>
