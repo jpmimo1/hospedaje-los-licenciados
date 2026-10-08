@@ -15,6 +15,8 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { presentationSpacing } from "@/lib/presentation-spacing";
 import { pageAlternates } from "@/lib/seo-urls";
 import { SITE_URL } from "@/lib/site-url";
+import { getLocalizedMediaAlts } from "@/lib/get-localized-media-alts";
+import { photoAlt, withLocalizedMediaAlt, withLocalizedRoomCardAlt } from "@/lib/photo-alt";
 
 const dictionary = {
   es: {
@@ -113,9 +115,18 @@ export default async function HomePage({
     }),
   ]);
 
+  const mediaAlts = await getLocalizedMediaAlts(payload, locale, [
+    siteContent.heroImage,
+    siteContent.aboutImage,
+    ...roomsData.docs.map((room) => room.gallery?.[0]?.image),
+  ]);
   const heroImage =
     siteContent.heroImage && typeof siteContent.heroImage === "object"
-      ? siteContent.heroImage
+      ? withLocalizedMediaAlt(siteContent.heroImage, mediaAlts)
+      : null;
+  const aboutImage =
+    siteContent.aboutImage && typeof siteContent.aboutImage === "object"
+      ? withLocalizedMediaAlt(siteContent.aboutImage, mediaAlts)
       : null;
   const heroRatio =
     heroImage?.width && heroImage.height &&
@@ -192,7 +203,7 @@ export default async function HomePage({
               {heroImage?.url && (
                 <Image
                   src={heroImage.url}
-                  alt={heroImage.alt || "Hospedaje Los Licenciados Cusco"}
+                  alt={photoAlt(heroImage, locale, "Hospedaje Los Licenciados, Cusco")}
                   fill
                   className="object-contain"
                   style={{
@@ -255,7 +266,9 @@ export default async function HomePage({
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {roomsData.docs.map((room) => {
-              return <RoomCard key={room.id} room={room} locale={locale} />;
+              return (
+                <RoomCard key={room.id} room={withLocalizedRoomCardAlt(room, mediaAlts)} locale={locale} />
+              );
             })}
           </div>
           <div className="text-center mt-12">
@@ -278,18 +291,15 @@ export default async function HomePage({
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div className="w-full lg:w-1/2 relative group">
               <div className="relative h-75 md:h-112.5 rounded-2xl overflow-hidden shadow-lg">
-                {siteContent.aboutImage &&
-                  typeof siteContent.aboutImage === "object" && (
-                    <Image
-                      src={siteContent.aboutImage.url || ""}
-                      alt={
-                        siteContent.aboutImage.alt || "Familia Los Licenciados"
-                      }
-                      fill
-                      className="object-cover transition-transform duration-700"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  )}
+                {aboutImage?.url && (
+                  <Image
+                    src={aboutImage.url}
+                    alt={photoAlt(aboutImage, locale, "Hospedaje Los Licenciados, Cusco")}
+                    fill
+                    className="object-cover transition-transform duration-700"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                )}
               </div>
             </div>
 

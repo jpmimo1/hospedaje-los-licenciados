@@ -9,6 +9,7 @@ import type { Media } from "@/payload-types";
 import { motion } from "framer-motion";
 import { Dialog } from "radix-ui";
 import { closeRoomGallery, roomGalleryOpener } from "@/lib/room-gallery-history";
+import { photoAlt } from "@/lib/photo-alt";
 
 interface RoomGalleryProps {
   images: { image: number | Media; id?: string | null }[] | null | undefined;
@@ -21,7 +22,6 @@ const dictionary = {
     back: "Volver",
     close: "Cerrar galería",
     title: "Galería de fotos de",
-    photo: "Foto",
     end: "Fin de la galería de",
     backToRoom: "Volver a la habitación",
   },
@@ -29,7 +29,6 @@ const dictionary = {
     back: "Back",
     close: "Close gallery",
     title: "Photo gallery for",
-    photo: "Photo",
     end: "End of the gallery for",
     backToRoom: "Back to the room",
   },
@@ -109,7 +108,7 @@ export function RoomGallery({ images, roomName, locale }: RoomGalleryProps) {
                     >
                       <Image
                         src={media.url}
-                        alt={media.alt || roomName + " - " + t.photo + " " + (index + 1)}
+                        alt={photoAlt(media, locale, roomName, index + 1)}
                         width={media.width || 1200}
                         height={media.height || 800}
                         className="w-auto h-auto max-w-full max-h-[75dvh] object-contain rounded-xl"

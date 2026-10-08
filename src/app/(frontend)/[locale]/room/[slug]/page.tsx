@@ -20,7 +20,6 @@ import { DynamicIcon } from "@/components/DynamicIcon";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { RoomGallery } from "@/components/RoomGallery";
 import { RoomGalleryLink } from "@/components/RoomGalleryLink";
-import { Media } from "@/payload-types";
 import { bedLabels } from "@/data/bedLabels";
 import { bathroomTypes } from "@/data/bathroomTypes";
 import { Container } from "@/components/Container";
@@ -31,6 +30,7 @@ import { buildRoomMetadata } from "@/lib/room-metadata";
 import { getPublicRoomTranslations } from "@/lib/get-public-room-translations";
 import { isValidRoomTranslation, roomLanguages, roomVersionsById } from "@/lib/seo-urls";
 import { SITE_URL } from "@/lib/site-url";
+import { photoAlt } from "@/lib/photo-alt";
 
 const dictionaries = {
   es: {
@@ -46,6 +46,7 @@ const dictionaries = {
     priceBasis: "Por habitación y noche",
     bookingConditions: "Condiciones de reserva",
     viewAllPhotos: "Ver todas",
+    openGallery: "Abrir galería de fotos",
     photos: "Fotos",
     otherRoomsTitle: "Otras habitaciones",
     otherRoomsDescription: "Compara otras opciones para tu estadía.",
@@ -64,6 +65,7 @@ const dictionaries = {
     priceBasis: "Per room, per night",
     bookingConditions: "Booking conditions",
     viewAllPhotos: "View all",
+    openGallery: "Open photo gallery",
     photos: "Photos",
     otherRoomsTitle: "Other rooms",
     otherRoomsDescription: "Compare other options for your stay.",
@@ -135,6 +137,9 @@ export default async function RoomPage({ params }: Props) {
     depth: 1,
   });
   const alternativeRooms = selectAlternativeRooms(room, candidates);
+  const [firstImage, secondImage, thirdImage] = room.gallery?.map((item) =>
+    typeof item.image === "object" ? item.image : null,
+  ) ?? [];
 
   const t = dictionaries[locale as "es" | "en"] || dictionaries.es;
   const bathroom = bathroomTypes[room.bathroomType];
@@ -162,57 +167,53 @@ export default async function RoomPage({ params }: Props) {
         </LocalLink>
 
         {/* Gallery Grid */}
-        {room.gallery && room.gallery.length > 0 && (
+        {firstImage?.url && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 h-75 md:h-112.5 mb-10 rounded-2xl overflow-hidden">
             <div className="md:col-span-3 bg-muted relative group cursor-pointer overflow-hidden h-full">
               <RoomGalleryLink
                 href={`/room/${slug}?showGallery=true`}
-                aria-label={`${t.viewAllPhotos}: ${room.name}`}
+                aria-label={`${t.openGallery}: ${room.name}`}
                 className="md:col-span-3 bg-muted relative group cursor-pointer scroll-smooth block h-full"
               >
                 <Image
-                  src={
-                    typeof room.gallery[0].image !== "number"
-                      ? room.gallery[0].image.url || ""
-                      : ""
-                  }
-                  alt={room.name}
+                  src={firstImage.url}
+                  alt={photoAlt(firstImage, locale, room.name, 1)}
                   fill
                   sizes="(max-width: 768px) 100vw, 75vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                   priority
                 />
                 <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-bold text-foreground shadow-sm md:hidden">
-                  1 / {room.gallery.length} {t.photos}
+                  1 / {room.gallery?.length} {t.photos}
                 </div>
               </RoomGalleryLink>
             </div>
 
             <div className="hidden md:flex flex-col gap-3 h-full">
-              {room.gallery[1] && (
+              {secondImage?.url && (
                 <RoomGalleryLink
                   href={`/room/${slug}?showGallery=true`}
-                  aria-label={`${t.viewAllPhotos}: ${room.name}`}
+                  aria-label={`${t.openGallery}: ${room.name}`}
                   className="bg-muted flex-1 relative overflow-hidden group cursor-pointer"
                 >
                   <Image
-                    src={(room.gallery[1].image as Media).url!}
-                    alt="Detalle"
+                    src={secondImage.url}
+                    alt={photoAlt(secondImage, locale, room.name, 2)}
                     fill
                     sizes="(max-width: 768px) 100vw, 25vw"
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </RoomGalleryLink>
               )}
-              {room.gallery[2] && (
+              {thirdImage?.url && (
                 <RoomGalleryLink
                   href={`/room/${slug}?showGallery=true`}
-                  aria-label={`${t.viewAllPhotos}: ${room.name}`}
+                  aria-label={`${t.openGallery}: ${room.name}`}
                   className="bg-muted flex-1 relative overflow-hidden group cursor-pointer"
                 >
                   <Image
-                    src={(room.gallery[2].image as Media).url!}
-                    alt="Detalle"
+                    src={thirdImage.url}
+                    alt={photoAlt(thirdImage, locale, room.name, 3)}
                     fill
                     sizes="(max-width: 768px) 100vw, 25vw"
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
@@ -267,9 +268,9 @@ export default async function RoomPage({ params }: Props) {
             <hr className="border-border mb-8" />
 
             <div className="mb-10">
-              <h3 className="font-serif text-2xl font-bold text-foreground mb-6">
+              <h2 className="font-serif text-2xl font-bold text-foreground mb-6">
                 {t.amenitiesTitle}
-              </h3>
+              </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
                 <div className="flex items-center gap-3 text-foreground">
                   <BathroomIcon

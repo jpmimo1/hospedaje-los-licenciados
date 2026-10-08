@@ -4,6 +4,7 @@ import { LocalLink } from "./LocaleLink";
 import type { Room } from "@/payload-types";
 import { bedLabels } from "@/data/bedLabels";
 import { bathroomTypes } from "@/data/bathroomTypes";
+import { photoAlt } from "@/lib/photo-alt";
 
 const dictionary = {
   es: {
@@ -22,17 +23,25 @@ const dictionary = {
   },
 };
 
-export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
+export function RoomCard({ room, locale, headingLevel = 3 }: {
+  room: Room;
+  locale: Locales;
+  headingLevel?: 2 | 3;
+}) {
   const t = dictionary[locale] || dictionary.es;
   const bedLabel = bedLabels[locale]?.[room.bedConfiguration];
   const bathroom = bathroomTypes[room.bathroomType];
   const BathroomIcon = bathroom.icon;
+  const Heading = headingLevel === 2 ? "h2" : "h3";
 
   const firstGalleryItem = room.gallery?.[0]?.image;
   const imageUrl =
     typeof firstGalleryItem === "object" ? firstGalleryItem.url : "";
-  const imageAlt =
-    typeof firstGalleryItem === "object" ? firstGalleryItem.alt : room.name;
+  const imageAlt = photoAlt(
+    typeof firstGalleryItem === "object" ? firstGalleryItem : null,
+    locale,
+    room.name,
+  );
 
   const url = `/room/${room.slug}`;
 
@@ -49,7 +58,7 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
         {imageUrl && (
           <Image
             src={imageUrl}
-            alt={imageAlt || "Habitación"}
+            alt={imageAlt}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -58,9 +67,9 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
       </div>
 
       <div className="@container p-5 flex flex-col grow min-w-0">
-        <h3 className="font-serif text-2xl font-bold text-foreground mb-3 break-words">
+        <Heading className="font-serif text-2xl font-bold text-foreground mb-3 break-words">
           {room.name}
-        </h3>
+        </Heading>
 
         <ul className="space-y-1.5 text-sm text-foreground mb-3">
           {room.capacity != null && room.capacity > 0 && (

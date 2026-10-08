@@ -7,6 +7,8 @@ import { SITE_URL } from "@/lib/site-url";
 import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
 import { pageAlternates } from "@/lib/seo-urls";
+import { getLocalizedMediaAlts } from "@/lib/get-localized-media-alts";
+import { withLocalizedRoomCardAlt } from "@/lib/photo-alt";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -58,6 +60,11 @@ export default async function RoomsPage({ params }: Props) {
     locale,
     pagination: false,
   });
+  const mediaAlts = await getLocalizedMediaAlts(
+    payload,
+    locale,
+    rooms.map((room) => room.gallery?.[0]?.image),
+  );
 
   return (
     <div className="bg-muted min-h-screen pb-20">
@@ -68,7 +75,7 @@ export default async function RoomsPage({ params }: Props) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {rooms.map((room) => (
-              <RoomCard key={room.id} room={room} locale={locale} />
+              <RoomCard key={room.id} room={withLocalizedRoomCardAlt(room, mediaAlts)} locale={locale} headingLevel={2} />
             ))}
           </div>
         )}
