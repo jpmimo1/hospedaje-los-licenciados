@@ -1,4 +1,5 @@
 import { getPayload } from "payload";
+import type { Metadata } from "next";
 import configPromise from "@payload-config";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -12,12 +13,18 @@ import { ArrowRight } from "lucide-react";
 
 const dictionary = {
   es: {
+    seoTitle: "Nuestro hospedaje familiar en Cusco | Los Licenciados",
+    seoDescription:
+      "Conoce la historia de Los Licenciados, un hospedaje familiar en San Sebastián, Cusco, donde cuidamos la limpieza y te recibimos con un trato cercano.",
     roomsTitle: "Encuentra tu habitación",
     roomsDescription:
       "Conoce nuestras opciones y elige la que mejor se adapte a tu estadía.",
     viewRooms: "Ver habitaciones",
   },
   en: {
+    seoTitle: "Our Family-Run Guesthouse in Cusco | Los Licenciados",
+    seoDescription:
+      "Discover the story of Los Licenciados, a family-run guesthouse in San Sebastián, Cusco, with clean rooms and a warm, personal welcome.",
     roomsTitle: "Find your room",
     roomsDescription:
       "Explore our options and choose the room that best suits your stay.",
@@ -28,6 +35,13 @@ const dictionary = {
 type Props = {
   params: Promise<{ locale: Locales }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = dictionary[locale] || dictionary.es;
+
+  return { title: t.seoTitle, description: t.seoDescription };
+}
 
 export default async function AboutPage({ params }: Props) {
   const resolvedParams = await params;

@@ -1,4 +1,5 @@
 import { Inter, Lora } from "next/font/google";
+import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "../../globals.css";
@@ -16,10 +17,23 @@ const lora = Lora({
   display: "swap",
 });
 
-export const metadata = {
-  title: "Hospedaje Los Licenciados | Cusco",
-  description: "Tu hogar en el corazón de Cusco",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+
+  return locale === "en"
+    ? {
+        title: "Los Licenciados Guesthouse | Cusco",
+        description: "Your family-run guesthouse in San Sebastián, Cusco.",
+      }
+    : {
+        title: "Hospedaje Los Licenciados | Cusco",
+        description: "Tu hospedaje familiar en San Sebastián, Cusco.",
+      };
+}
 
 export default async function RootLayout({
   children,

@@ -1,4 +1,6 @@
 import { getPayload } from "payload";
+import type { Metadata } from "next";
+import { cache } from "react";
 import configPromise from "@payload-config";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -25,6 +27,7 @@ import { Container } from "@/components/Container";
 import { SectionHeading } from "@/components/SectionHeading";
 import { RoomCard } from "@/components/RoomCard";
 import { selectAlternativeRooms } from "@/lib/select-alternative-rooms";
+import { buildRoomMetadata } from "@/lib/room-metadata";
 
 const dictionaries = {
   es: {
@@ -69,6 +72,31 @@ type Props = {
   params: Promise<{ locale: Locales; slug: string }>;
 };
 
+// React cache shares this lookup between metadata and page rendering within
+// one request; it does not retain CMS content between separate requests.
+const getRoom = cache(async (locale: Locales, slug: string) => {
+  const payload = await getPayload({ config: configPromise });
+  const { docs } = await payload.find({
+    collection: "rooms",
+    locale,
+    fallbackLocale: false,
+    overrideAccess: false,
+    where: { slug: { equals: slug } },
+    limit: 1,
+  });
+
+  const room = docs[0];
+  if (!room || typeof room.name !== "string" || !room.name.trim()) notFound();
+  return room;
+});
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const room = await getRoom(locale, slug);
+
+  return buildRoomMetadata(room, locale);
+}
+
 export default async function RoomPage({ params }: Props) {
   const resolvedParams = await params;
   const { locale, slug } = resolvedParams;
@@ -76,20 +104,13 @@ export default async function RoomPage({ params }: Props) {
   const payload = await getPayload({ config: configPromise });
 
   // Execute both queries in parallel for maximum performance
-  const [roomData, contactSettings] = await Promise.all([
-    payload.find({
-      collection: "rooms",
-      locale: locale,
-      where: { slug: { equals: slug } },
-    }),
+  const [room, contactSettings] = await Promise.all([
+    getRoom(locale, slug),
     payload.findGlobal({
       slug: "contact-settings",
       locale: locale,
     }),
   ]);
-
-  const room = roomData.docs[0];
-  if (!room) return notFound();
 
   const { docs: candidates } = await payload.find({
     collection: "rooms",

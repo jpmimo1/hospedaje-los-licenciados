@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
@@ -15,6 +16,9 @@ import { presentationSpacing } from "@/lib/presentation-spacing";
 
 const dictionary = {
   es: {
+    seoTitle: "Hospedaje en San Sebastián, Cusco | Los Licenciados",
+    seoDescription:
+      "Hospedaje familiar en San Sebastián, Cusco, cerca de la avenida de la Cultura. Habitaciones con baño privado o compartido. Consulta por WhatsApp.",
     heroButton: "Ver habitaciones",
     heroWhatsApp: "Consultar por WhatsApp",
     amenitiesTitle: "Nuestros servicios",
@@ -35,6 +39,9 @@ const dictionary = {
     viewLocationAndContact: "Ver ubicación y contacto",
   },
   en: {
+    seoTitle: "Guesthouse in San Sebastián, Cusco | Los Licenciados",
+    seoDescription:
+      "Family-run guesthouse in San Sebastián, Cusco, near Avenida de la Cultura. Rooms with private or shared bathrooms. Contact us on WhatsApp.",
     heroButton: "View rooms",
     heroWhatsApp: "Contact us on WhatsApp",
     amenitiesTitle: "Our amenities",
@@ -55,6 +62,17 @@ const dictionary = {
     viewLocationAndContact: "View location and contact",
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locales }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = dictionary[locale] || dictionary.es;
+
+  return { title: t.seoTitle, description: t.seoDescription };
+}
 
 export default async function HomePage({
   params,
