@@ -99,6 +99,17 @@ export const Rooms: CollectionConfig = {
       ],
     },
     {
+      name: "bathroomType",
+      type: "select",
+      label: "Tipo de baño",
+      localized: false,
+      required: true,
+      options: [
+        { label: "Baño privado", value: "private" },
+        { label: "Baño compartido", value: "shared" },
+      ],
+    },
+    {
       name: "featured",
       type: "checkbox",
       defaultValue: false,

@@ -25,8 +25,8 @@ const dictionary = {
     phoneTitle: "Teléfono / WhatsApp",
     emailTitle: "Correo Electrónico",
     scheduleTitle: "Horarios",
-    checkIn: "Check-in: 14:00 hrs",
-    checkOut: "Check-out: 11:00 hrs",
+    checkIn: "Check-in",
+    checkOut: "Check-out",
     mapTitle: "Mapa de ubicación en Cusco",
     viewRooms: "Ver habitaciones y tarifas",
   },
@@ -42,8 +42,8 @@ const dictionary = {
     phoneTitle: "Phone / WhatsApp",
     emailTitle: "Email",
     scheduleTitle: "Schedule",
-    checkIn: "Check-in: 2:00 PM",
-    checkOut: "Check-out: 11:00 AM",
+    checkIn: "Check-in",
+    checkOut: "Check-out",
     mapTitle: "Location map in Cusco",
     viewRooms: "View rooms and rates",
   },
@@ -132,8 +132,8 @@ export default async function ContactPage({ params }: Props) {
                       {t.scheduleTitle}
                     </h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      {t.checkIn} <br />
-                      {t.checkOut}
+                      {t.checkIn}: {contactSettings.checkInTime} <br />
+                      {t.checkOut}: {contactSettings.checkOutTime}
                     </p>
                   </div>
                 </div>

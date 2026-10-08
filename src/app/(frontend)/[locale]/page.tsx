@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { SiWhatsapp } from "@icons-pack/react-simple-icons";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { DynamicIcon } from "@/components/DynamicIcon";
@@ -31,6 +31,8 @@ const dictionary = {
     aboutFallback:
       "Bienvenido a Hospedaje Los Licenciados. Un refugio familiar donde la tradición andina y el confort moderno se encuentran para ofrecerte una experiencia inolvidable en el corazón de Cusco.",
     readFullStory: "Conócenos",
+    getDirections: "Cómo llegar",
+    viewLocationAndContact: "Ver ubicación y contacto",
   },
   en: {
     heroButton: "View rooms",
@@ -49,6 +51,8 @@ const dictionary = {
     aboutFallback:
       "Welcome to Hospedaje Los Licenciados. A family refuge where Andean tradition and modern comfort meet to offer you an unforgettable experience in the heart of Cusco.",
     readFullStory: "Get to know us",
+    getDirections: "Get directions",
+    viewLocationAndContact: "View location and contact",
   },
 };
 
@@ -109,6 +113,14 @@ export default async function HomePage({
     contactSettings.defaultMessage || "Hola, deseo información.",
   );
   const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+
+  const locationTitle = siteContent.locationTitle?.trim();
+  const locationDescription = siteContent.locationDescription?.trim();
+  const nearbyReferences = siteContent.nearbyReferences?.filter(
+    (reference) => reference.name?.trim(),
+  ) || [];
+  const address = contactSettings.address?.trim();
+  const googleMapsUrl = contactSettings.googleMapsUrl?.trim();
 
   const lowestPrice = cheapestRoomData.docs[0]?.price
     ? `S/ ${cheapestRoomData.docs[0].price}`
@@ -279,6 +291,65 @@ export default async function HomePage({
           </div>
         </Container>
       </section>
+      {/* ================= LOCATION SECTION ================= */}
+      {locationTitle && (
+        <section className={`${presentationSpacing.section} bg-background border-t border-border/50`}>
+          <Container>
+            <SectionHeading
+              title={locationTitle}
+              description={locationDescription}
+            />
+
+            {nearbyReferences.length > 0 && (
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8 md:mb-12">
+                {nearbyReferences.map((reference, index) => (
+                  <li
+                    key={reference.id || index}
+                    className="min-w-0 p-5 sm:p-6 bg-card border border-border rounded-xl"
+                  >
+                    <h3 className="font-serif text-xl font-semibold text-foreground leading-tight break-words">
+                      {reference.name}
+                    </h3>
+                    {reference.description?.trim() && (
+                      <p className="text-muted-foreground leading-relaxed mt-3 break-words">
+                        {reference.description}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <div className="max-w-4xl mx-auto text-center">
+              {address && (
+                <address className="not-italic text-muted-foreground leading-relaxed mb-6 break-words">
+                  {address}
+                </address>
+              )}
+              <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3">
+                {googleMapsUrl && (
+                  <a
+                    href={googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-background px-5 py-3 rounded-lg font-medium text-sm text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  >
+                    {t.getDirections}
+                    <ArrowUpRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  </a>
+                )}
+                <LocalLink
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 border border-border bg-card hover:bg-muted text-foreground px-5 py-3 rounded-lg font-medium text-sm text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                >
+                  {t.viewLocationAndContact}
+                  <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                </LocalLink>
+              </div>
+            </div>
+          </Container>
+        </section>
+      )}
       <MobileBottomBar
         locale={locale}
         variant="home"

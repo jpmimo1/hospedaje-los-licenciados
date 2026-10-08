@@ -66,6 +66,70 @@ export const SiteContent: GlobalConfig = {
           ],
         },
         {
+          label: "Nuestra ubicación",
+          fields: [
+            {
+              name: "locationTitle",
+              type: "text",
+              label: "Título de la Sección",
+              localized: true,
+              required: false,
+              admin: {
+                description: "Escribe un título breve en español e inglés.",
+              },
+            },
+            {
+              name: "locationDescription",
+              type: "textarea",
+              label: "Descripción Breve",
+              localized: true,
+              required: false,
+              admin: {
+                description:
+                  "Resume la ubicación y su entorno en cada idioma. La dirección se obtiene de Contacto.",
+              },
+            },
+            {
+              name: "nearbyReferences",
+              type: "array",
+              label: "Referencias Cercanas",
+              localized: false,
+              required: false,
+              labels: {
+                singular: "Referencia",
+                plural: "Referencias",
+              },
+              admin: {
+                description:
+                  "Añade lugares cercanos verificados. La lista y su orden se comparten entre idiomas.",
+              },
+              fields: [
+                {
+                  name: "name",
+                  type: "text",
+                  label: "Nombre",
+                  localized: true,
+                  required: false,
+                  admin: {
+                    description: "Nombre de la referencia en el idioma seleccionado.",
+                  },
+                },
+                {
+                  name: "description",
+                  type: "textarea",
+                  label: "Descripción",
+                  localized: true,
+                  required: false,
+                  admin: {
+                    description:
+                      "Describe la referencia sin estimar distancias ni tiempos de traslado.",
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: "Servicios Generales",
           fields: [
             {

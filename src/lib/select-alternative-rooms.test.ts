@@ -11,6 +11,7 @@ function room(id: number, capacity: Room["capacity"], price: number, slug = `roo
     capacity,
     price,
     bedConfiguration: "1-double",
+    bathroomType: "private",
     roomSize: 20,
     featured: false,
     createdAt: "2026-01-01T00:00:00Z",

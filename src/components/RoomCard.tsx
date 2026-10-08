@@ -3,6 +3,7 @@ import { ArrowRight, BedDouble, Users } from "lucide-react";
 import { LocalLink } from "./LocaleLink";
 import type { Room } from "@/payload-types";
 import { bedLabels } from "@/data/bedLabels";
+import { bathroomTypes } from "@/data/bathroomTypes";
 
 const dictionary = {
   es: {
@@ -24,6 +25,8 @@ const dictionary = {
 export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
   const t = dictionary[locale] || dictionary.es;
   const bedLabel = bedLabels[locale]?.[room.bedConfiguration];
+  const bathroom = bathroomTypes[room.bathroomType];
+  const BathroomIcon = bathroom.icon;
 
   const firstGalleryItem = room.gallery?.[0]?.image;
   const imageUrl =
@@ -74,6 +77,10 @@ export function RoomCard({ room, locale }: { room: Room; locale: Locales }) {
               <span className="min-w-0 break-words">{bedLabel}</span>
             </li>
           )}
+          <li className="flex items-start gap-2">
+            <BathroomIcon aria-hidden="true" className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+            <span className="min-w-0 break-words">{bathroom.labels[locale]}</span>
+          </li>
         </ul>
 
         {room.shortDescription && (

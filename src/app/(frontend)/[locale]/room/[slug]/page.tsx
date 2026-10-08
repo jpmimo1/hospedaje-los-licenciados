@@ -20,6 +20,7 @@ import { RoomGallery } from "@/components/RoomGallery";
 import { RoomGalleryLink } from "@/components/RoomGalleryLink";
 import { Media } from "@/payload-types";
 import { bedLabels } from "@/data/bedLabels";
+import { bathroomTypes } from "@/data/bathroomTypes";
 import { Container } from "@/components/Container";
 import { SectionHeading } from "@/components/SectionHeading";
 import { RoomCard } from "@/components/RoomCard";
@@ -101,6 +102,8 @@ export default async function RoomPage({ params }: Props) {
   const alternativeRooms = selectAlternativeRooms(room, candidates);
 
   const t = dictionaries[locale as "es" | "en"] || dictionaries.es;
+  const bathroom = bathroomTypes[room.bathroomType];
+  const BathroomIcon = bathroom.icon;
   const currentBedLabel =
     bedLabels[locale as "es" | "en"][
       room.bedConfiguration as keyof typeof bedLabels.es
@@ -233,6 +236,15 @@ export default async function RoomPage({ params }: Props) {
                 {t.amenitiesTitle}
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
+                <div className="flex items-center gap-3 text-foreground">
+                  <BathroomIcon
+                    aria-hidden="true"
+                    className="text-primary w-5 h-5 shrink-0"
+                  />
+                  <span className="font-medium text-sm leading-tight">
+                    {bathroom.labels[locale]}
+                  </span>
+                </div>
                 {room.amenities?.map((amenity) => {
                   if (typeof amenity === "number") return null;
                   return (

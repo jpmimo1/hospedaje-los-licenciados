@@ -15,6 +15,9 @@ import * as migration_20261002_222417 from './20261002_222417';
 import * as migration_20261005_002731_add_google_maps_url from './20261005_002731_add_google_maps_url';
 import * as migration_20261005_181640_update_policies_icons from './20261005_181640_update_policies_icons';
 import * as migration_20261005_211729_enable_policies_order from './20261005_211729_enable_policies_order';
+import * as migration_20261008_025759_add_rooms_bathroom_type from './20261008_025759_add_rooms_bathroom_type';
+import * as migration_20261008_030520_require_rooms_bathroom_type from './20261008_030520_require_rooms_bathroom_type';
+import * as migration_20261008_031857_add_home_location_content from './20261008_031857_add_home_location_content';
 
 export const migrations = [
   {
@@ -100,6 +103,21 @@ export const migrations = [
   {
     up: migration_20261005_211729_enable_policies_order.up,
     down: migration_20261005_211729_enable_policies_order.down,
-    name: '20261005_211729_enable_policies_order'
+    name: '20261005_211729_enable_policies_order',
+  },
+  {
+    up: migration_20261008_025759_add_rooms_bathroom_type.up,
+    down: migration_20261008_025759_add_rooms_bathroom_type.down,
+    name: '20261008_025759_add_rooms_bathroom_type',
+  },
+  {
+    up: migration_20261008_030520_require_rooms_bathroom_type.up,
+    down: migration_20261008_030520_require_rooms_bathroom_type.down,
+    name: '20261008_030520_require_rooms_bathroom_type',
+  },
+  {
+    up: migration_20261008_031857_add_home_location_content.up,
+    down: migration_20261008_031857_add_home_location_content.down,
+    name: '20261008_031857_add_home_location_content'
   },
 ];
