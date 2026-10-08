@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { negotiateLocale } from "@/lib/negotiate-locale";
 
 const locales = ["es", "en"];
 const defaultLocale = "es";
@@ -24,12 +25,15 @@ export function proxy(request: NextRequest) {
 
   if (pathnameHasLocale) return;
 
-  const acceptLanguage = request.headers.get("accept-language") || "";
-  const isEnglish = acceptLanguage.toLowerCase().includes("en");
-  const locale = isEnglish ? "en" : defaultLocale;
+  const locale = negotiateLocale(
+    request.headers.get("accept-language"),
+    locales,
+    defaultLocale,
+  );
 
-  request.nextUrl.pathname = `/${locale}${pathname}`;
-  return NextResponse.redirect(request.nextUrl);
+  const redirectUrl = request.nextUrl.clone();
+  redirectUrl.pathname = `/${locale}${pathname}`;
+  return NextResponse.redirect(redirectUrl);
 }
 
 export const config = {
