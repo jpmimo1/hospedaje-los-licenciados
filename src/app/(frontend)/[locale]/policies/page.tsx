@@ -8,6 +8,8 @@ import { SITE_URL } from "@/lib/site-url";
 import { Container } from "@/components/Container";
 import { PageIntro } from "@/components/PageIntro";
 import { pageAlternates } from "@/lib/seo-urls";
+import { getSiteContent } from "@/lib/get-site-content";
+import { buildSocialMetadata, shareImage } from "@/lib/social-metadata";
 
 type TLocale = "es" | "en";
 
@@ -66,11 +68,17 @@ export async function generateMetadata({
   const { locale: rawLocale } = await params;
   const locale = getValidLocale(rawLocale);
   const t = dictionary[locale];
+  const siteContent = await getSiteContent(locale);
+  const alternates = pageAlternates(SITE_URL, locale, "/policies");
 
   return {
     title: t.seoTitle,
     description: t.seoDesc,
-    alternates: pageAlternates(SITE_URL, locale, "/policies"),
+    alternates,
+    ...buildSocialMetadata({
+      title: t.seoTitle, description: t.seoDesc, locale,
+      ...alternates, image: shareImage(siteContent.heroImage, SITE_URL),
+    }),
   };
 }
 

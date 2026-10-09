@@ -1,5 +1,6 @@
 import { getPayload } from "payload";
 import configPromise from "@payload-config";
+import { getSiteContent } from "@/lib/get-site-content";
 import { Phone, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import { LocalLink } from "./LocaleLink";
@@ -44,10 +45,7 @@ export async function Footer({ locale }: { locale: "es" | "en" }) {
     locale: locale,
   });
 
-  const siteContent = await payload.findGlobal({
-    slug: "site-content",
-    locale: locale,
-  });
+  const siteContent = await getSiteContent(locale);
 
   const t = dictionary[locale] || dictionary.es;
 

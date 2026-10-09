@@ -9,6 +9,8 @@ import { PageIntro } from "@/components/PageIntro";
 import { pageAlternates } from "@/lib/seo-urls";
 import { getLocalizedMediaAlts } from "@/lib/get-localized-media-alts";
 import { withLocalizedRoomCardAlt } from "@/lib/photo-alt";
+import { getSiteContent } from "@/lib/get-site-content";
+import { buildSocialMetadata, shareImage } from "@/lib/social-metadata";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -41,11 +43,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale } = await params;
   const locale = getValidLocale(rawLocale);
   const t = dictionary[locale];
+  const siteContent = await getSiteContent(locale);
+  const alternates = pageAlternates(SITE_URL, locale, "/rooms");
+  const title = `${t.title} | Los Licenciados Cusco`;
 
   return {
-    title: `${t.title} | Los Licenciados Cusco`,
+    title,
     description: t.description,
-    alternates: pageAlternates(SITE_URL, locale, "/rooms"),
+    alternates,
+    ...buildSocialMetadata({
+      title, description: t.description, locale,
+      ...alternates, image: shareImage(siteContent.heroImage, SITE_URL),
+    }),
   };
 }
 

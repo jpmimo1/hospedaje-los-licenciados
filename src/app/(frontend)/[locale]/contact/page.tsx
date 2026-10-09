@@ -9,6 +9,8 @@ import { formatPeruvianPhone } from "@/lib/format-phone";
 import { LocalLink } from "@/components/LocaleLink";
 import { pageAlternates } from "@/lib/seo-urls";
 import { SITE_URL } from "@/lib/site-url";
+import { getSiteContent } from "@/lib/get-site-content";
+import { buildSocialMetadata, shareImage } from "@/lib/social-metadata";
 
 type Props = {
   params: Promise<{ locale: Locales }>;
@@ -54,11 +56,17 @@ const dictionary = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = dictionary[locale as "es" | "en"] || dictionary.es;
+  const siteContent = await getSiteContent(locale);
+  const alternates = pageAlternates(SITE_URL, locale, "/contact");
 
   return {
     title: t.seoTitle,
     description: t.seoDesc,
-    alternates: pageAlternates(SITE_URL, locale, "/contact"),
+    alternates,
+    ...buildSocialMetadata({
+      title: t.seoTitle, description: t.seoDesc, locale,
+      ...alternates, image: shareImage(siteContent.heroImage, SITE_URL),
+    }),
   };
 }
 

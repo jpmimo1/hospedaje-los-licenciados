@@ -10,7 +10,7 @@ type RoomMetadataSource = Pick<
 export function buildRoomMetadata(
   room: RoomMetadataSource,
   locale: Locales,
-): Metadata {
+) {
   const name = room.name.trim();
   const shortDescription = room.shortDescription?.trim();
   const bathroom = bathroomTypes[room.bathroomType]?.labels[locale].toLowerCase();
@@ -36,5 +36,5 @@ export function buildRoomMetadata(
     : `${name} at Los Licenciados in San Sebastián, Cusco`;
   const description = shortDescription || `${[location, ...details].join(", ")}.`;
 
-  return { title: `${name} | Los Licenciados`, description };
+  return { title: `${name} | Los Licenciados`, description } satisfies Metadata;
 }

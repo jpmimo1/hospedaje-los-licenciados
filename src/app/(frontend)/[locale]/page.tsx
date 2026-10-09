@@ -18,6 +18,8 @@ import { SITE_URL } from "@/lib/site-url";
 import { getLocalizedMediaAlts } from "@/lib/get-localized-media-alts";
 import { photoAlt, withLocalizedMediaAlt, withLocalizedRoomCardAlt } from "@/lib/photo-alt";
 import { LodgingJsonLd } from "@/components/LodgingJsonLd";
+import { getSiteContent } from "@/lib/get-site-content";
+import { buildSocialMetadata, shareImage } from "@/lib/social-metadata";
 
 const dictionary = {
   es: {
@@ -75,11 +77,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = dictionary[locale] || dictionary.es;
+  const siteContent = await getSiteContent(locale);
+  const alternates = pageAlternates(SITE_URL, locale, "");
 
   return {
     title: t.seoTitle,
     description: t.seoDescription,
-    alternates: pageAlternates(SITE_URL, locale, ""),
+    alternates,
+    ...buildSocialMetadata({
+      title: t.seoTitle, description: t.seoDescription, locale,
+      ...alternates, image: shareImage(siteContent.heroImage, SITE_URL),
+    }),
   };
 }
 
@@ -95,10 +103,7 @@ export default async function HomePage({
   const payload = await getPayload({ config: configPromise });
 
   const [siteContent, roomsData, cheapestRoomData, contactSettings] = await Promise.all([
-    payload.findGlobal({
-      slug: "site-content",
-      locale: locale,
-    }),
+    getSiteContent(locale),
     payload.find({
       collection: "rooms",
       locale: locale,
@@ -116,15 +121,15 @@ export default async function HomePage({
     }),
   ]);
 
-  const mediaAlts = await getLocalizedMediaAlts(payload, locale, [
-    siteContent.heroImage,
-    siteContent.aboutImage,
-    ...roomsData.docs.map((room) => room.gallery?.[0]?.image),
-  ]);
   const heroImage =
     siteContent.heroImage && typeof siteContent.heroImage === "object"
-      ? withLocalizedMediaAlt(siteContent.heroImage, mediaAlts)
+      ? siteContent.heroImage
       : null;
+  const mediaAlts = await getLocalizedMediaAlts(payload, locale, [
+    siteContent.aboutImage,
+    ...roomsData.docs.map((room) => room.gallery?.[0]?.image),
+  ].filter((image) => (image && typeof image === "object" ? image.id : image) !== heroImage?.id));
+  if (heroImage) mediaAlts.set(heroImage.id, heroImage.alt);
   const aboutImage =
     siteContent.aboutImage && typeof siteContent.aboutImage === "object"
       ? withLocalizedMediaAlt(siteContent.aboutImage, mediaAlts)

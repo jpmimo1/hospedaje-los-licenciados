@@ -12,6 +12,8 @@ import { LocalLink } from "@/components/LocaleLink";
 import { ArrowRight } from "lucide-react";
 import { pageAlternates } from "@/lib/seo-urls";
 import { SITE_URL } from "@/lib/site-url";
+import { getSiteContent } from "@/lib/get-site-content";
+import { buildSocialMetadata, shareImage } from "@/lib/social-metadata";
 
 const dictionary = {
   es: {
@@ -41,11 +43,17 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = dictionary[locale] || dictionary.es;
+  const siteContent = await getSiteContent(locale);
+  const alternates = pageAlternates(SITE_URL, locale, "/about");
 
   return {
     title: t.seoTitle,
     description: t.seoDescription,
-    alternates: pageAlternates(SITE_URL, locale, "/about"),
+    alternates,
+    ...buildSocialMetadata({
+      title: t.seoTitle, description: t.seoDescription, locale,
+      ...alternates, image: shareImage(siteContent.heroImage, SITE_URL),
+    }),
   };
 }
 

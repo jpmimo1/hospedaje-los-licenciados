@@ -31,6 +31,8 @@ import { getPublicRoomTranslations } from "@/lib/get-public-room-translations";
 import { isValidRoomTranslation, roomLanguages, roomVersionsById } from "@/lib/seo-urls";
 import { SITE_URL } from "@/lib/site-url";
 import { photoAlt } from "@/lib/photo-alt";
+import { getSiteContent } from "@/lib/get-site-content";
+import { buildSocialMetadata, roomShareImage, shareImage } from "@/lib/social-metadata";
 
 const dictionaries = {
   es: {
@@ -104,12 +106,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const currentVersion = versions?.[locale];
   if (!versions || !currentVersion) notFound();
 
+  const metadata = buildRoomMetadata(room, locale);
+  const languages = roomLanguages(versions);
+  const image = roomShareImage(room, SITE_URL) ??
+    shareImage((await getSiteContent(locale)).heroImage, SITE_URL);
+
   return {
-    ...buildRoomMetadata(room, locale),
+    ...metadata,
     alternates: {
       canonical: currentVersion.url,
-      languages: roomLanguages(versions),
+      languages,
     },
+    ...buildSocialMetadata({
+      ...metadata, locale, canonical: currentVersion.url, languages, image,
+    }),
   };
 }
 
