@@ -17,6 +17,7 @@ import { pageAlternates } from "@/lib/seo-urls";
 import { SITE_URL } from "@/lib/site-url";
 import { getLocalizedMediaAlts } from "@/lib/get-localized-media-alts";
 import { photoAlt, withLocalizedMediaAlt, withLocalizedRoomCardAlt } from "@/lib/photo-alt";
+import { LodgingJsonLd } from "@/components/LodgingJsonLd";
 
 const dictionary = {
   es: {
@@ -163,6 +164,12 @@ export default async function HomePage({
 
   return (
     <div className="flex flex-col min-h-screen">
+      <LodgingJsonLd
+        siteUrl={SITE_URL}
+        locale={locale}
+        siteContent={siteContent}
+        contactSettings={contactSettings}
+      />
       {/* ================= HERO SECTION ================= */}
       <section className="relative bg-background py-10 sm:py-12 lg:py-16">
         <div id="home" className="absolute -top-18.75" />
