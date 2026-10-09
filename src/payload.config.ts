@@ -12,11 +12,13 @@ import { s3Storage } from "@payloadcms/storage-s3";
 import { ContactMessages } from "./collections/ContactMessages";
 import { AboutPage } from "./globals/AboutPage";
 import { Policies } from "./collections/Policies";
+import sharp from "sharp";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 export default buildConfig({
+  sharp,
   editor: lexicalEditor({}),
   collections: [Rooms, Amenities, Media, ContactMessages, Policies],
   globals: [ContactSettings, SiteContent, AboutPage],

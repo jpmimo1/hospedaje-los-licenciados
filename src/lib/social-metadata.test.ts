@@ -16,7 +16,7 @@ test("share images use absolute HTTP(S) original URLs, localized alt and actual 
   assert.deepEqual(shareImage(media("/api/media/file/hero.jpg?prefix=h-media", {
     alt: " Photo from CMS ", thumbnailURL: "/thumbnail.jpg",
   }), siteUrl), {
-    url: `${siteUrl}/api/media/file/hero.jpg?prefix=h-media`, alt: "Photo from CMS", width: 1600, height: 1200,
+    url: `${siteUrl}/api/media/file/hero.jpg?prefix=h-media`, alt: "Photo from CMS", width: 1600, height: 1200, type: "image/jpeg",
   });
   for (const [source, expected] of [
     ["https://cdn.example.com/hero.jpg", "https://cdn.example.com/hero.jpg"],
@@ -37,12 +37,77 @@ test("empty, unpopulated, invalid URLs and known non-image media are omitted", (
 test("missing alt or dimensions stay omitted instead of inventing values", () => {
   for (const value of [undefined, null, 0, -1, NaN, Infinity, 1.5]) {
     assert.deepEqual(shareImage(media("/hero.jpg", { alt: " ", width: value, height: value }), siteUrl), {
-      url: `${siteUrl}/hero.jpg`,
+      url: `${siteUrl}/hero.jpg`, type: "image/jpeg",
     });
   }
   assert.deepEqual(shareImage(media("/hero.jpg", { width: 800, height: null }), siteUrl), {
-    url: `${siteUrl}/hero.jpg`, alt: "Foto del CMS", width: 800,
+    url: `${siteUrl}/hero.jpg`, alt: "Foto del CMS", width: 800, type: "image/jpeg",
   });
+});
+
+test("a valid social variant uses its own URL, dimensions and MIME while retaining the localized alt", () => {
+  const source = media("/original.png", {
+    mimeType: "image/png", width: 2400, height: 1800,
+    sizes: { social: { url: "/social.jpg", width: 1200, height: 900, mimeType: "image/jpeg" } },
+  });
+  const original = structuredClone(source);
+  assert.deepEqual(shareImage(source, siteUrl), {
+    url: `${siteUrl}/social.jpg`, alt: "Foto del CMS", width: 1200, height: 900, type: "image/jpeg",
+  });
+  assert.deepEqual(source, original);
+  assert.equal(shareImage({ ...source, url: null }, siteUrl)?.url, `${siteUrl}/social.jpg`);
+  assert.equal(shareImage({ ...source, sizes: { social: {
+    ...source.sizes?.social, url: "https://cdn.example.com/social.jpg",
+  } } }, siteUrl)?.url, "https://cdn.example.com/social.jpg");
+});
+
+test("missing or invalid social URLs retain the original file and its metadata", () => {
+  const source = media("/original.png", { mimeType: "image/png", width: 2400, height: 1800 });
+  const expected = shareImage(source, siteUrl);
+  for (const url of [undefined, null, "", " ", "not-a-url", "javascript:alert(1)", "https://", "https://bad host/social.jpg",
+    "https://user:password@example.com/social.jpg", "data:image/jpeg;base64,AAA", "?image=social", "#social"]) {
+    assert.deepEqual(shareImage({ ...source, sizes: { social: {
+      url, width: 1200, height: 900, mimeType: "image/jpeg",
+    } } }, siteUrl), expected);
+  }
+  assert.deepEqual(shareImage({ ...source, sizes: { social: {
+    url: "/document.pdf", mimeType: "application/pdf",
+  } } }, siteUrl), expected);
+});
+
+test("incomplete social dimensions or MIME never inherit original file metadata", () => {
+  const source = media("/original.png", { mimeType: "image/png", width: 2400, height: 1800 });
+  for (const missing of [{}, { width: null, height: null, mimeType: null }, { width: 0, height: -1, mimeType: "" }]) {
+    assert.deepEqual(shareImage({ ...source, sizes: { social: { url: "/social.jpg", ...missing } } }, siteUrl), {
+      url: `${siteUrl}/social.jpg`, alt: "Foto del CMS",
+    });
+  }
+});
+
+test("Open Graph and Twitter resolve the chosen file metadata in ES/EN with and without a social variant", async () => {
+  const context = { trailingSlash: false, isStaticMetadataRouteFile: false };
+  for (const locale of seoLocales) {
+    for (const hasSocial of [false, true]) {
+      const alt = locale === "es" ? "Foto del CMS" : "CMS photo";
+      const source = media("/original.png", {
+        alt, mimeType: "image/png", width: 2400, height: 1800,
+        ...(hasSocial ? { sizes: { social: { url: "/social.jpg", width: 1200, height: 900, mimeType: "image/jpeg" } } } : {}),
+      });
+      const expected = hasSocial
+        ? { url: `${siteUrl}/social.jpg`, alt, width: 1200, height: 900, type: "image/jpeg" }
+        : { url: `${siteUrl}/original.png`, alt, width: 2400, height: 1800, type: "image/png" };
+      const social = buildSocialMetadata({
+        title: "Title", description: "Description", ...pageAlternates(siteUrl, locale, ""),
+        locale, image: shareImage(source, siteUrl),
+      });
+      const og = await resolveOpenGraph(social.openGraph, new URL(siteUrl), Promise.resolve(`/${locale}`), context, null);
+      const twitter = resolveTwitter(social.twitter, new URL(siteUrl), context, null);
+      for (const image of [og?.images?.[0], twitter?.images?.[0]]) {
+        assert.ok(image && typeof image === "object" && "url" in image);
+        assert.deepEqual({ ...image, url: image.url.toString() }, expected);
+      }
+    }
+  }
 });
 
 test("room images use the first valid gallery photo and fall back only when none exist", () => {
@@ -57,6 +122,16 @@ test("room images use the first valid gallery photo and fall back only when none
     assert.equal(roomShareImage({ gallery }, siteUrl), undefined);
     assert.deepEqual(roomShareImage({ gallery }, siteUrl) ?? general, general);
   }
+});
+
+test("social variants do not change which room photograph is selected", () => {
+  const first = media("/first-room.png", { mimeType: "image/png" });
+  const second = media("/second-room.png", {
+    sizes: { social: { url: "/second-room-social.jpg", mimeType: "image/jpeg" } },
+  });
+  assert.equal(roomShareImage({ gallery: [{ image: first }, { image: second }] }, siteUrl)?.url, `${siteUrl}/first-room.png`);
+  const firstWithSocial = { ...first, sizes: { social: { url: "/first-room-social.jpg", mimeType: "image/jpeg" } } };
+  assert.equal(roomShareImage({ gallery: [{ image: firstWithSocial }, { image: second }] }, siteUrl)?.url, `${siteUrl}/first-room-social.jpg`);
 });
 
 test("every public page shares its own localized texts, clean canonical and reciprocal locale", async () => {

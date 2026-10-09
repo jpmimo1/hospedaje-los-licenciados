@@ -4,6 +4,21 @@ export const Media: CollectionConfig = {
   slug: "media",
   upload: {
     focalPoint: true,
+    imageSizes: [
+      {
+        name: "social",
+        width: 1200,
+        height: undefined,
+        withoutEnlargement: true,
+        formatOptions: {
+          format: "jpeg",
+          options: {
+            quality: 80,
+            mozjpeg: true,
+          },
+        },
+      }
+    ]
   },
   access: {
     read: () => true,

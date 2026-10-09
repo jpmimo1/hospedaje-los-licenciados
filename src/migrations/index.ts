@@ -19,6 +19,7 @@ import * as migration_20261008_025759_add_rooms_bathroom_type from './20261008_0
 import * as migration_20261008_030520_require_rooms_bathroom_type from './20261008_030520_require_rooms_bathroom_type';
 import * as migration_20261008_031857_add_home_location_content from './20261008_031857_add_home_location_content';
 import * as migration_20261009_032253_add_structured_contact_address from './20261009_032253_add_structured_contact_address';
+import * as migration_20261009_220722 from './20261009_220722';
 
 export const migrations = [
   {
@@ -124,6 +125,11 @@ export const migrations = [
   {
     up: migration_20261009_032253_add_structured_contact_address.up,
     down: migration_20261009_032253_add_structured_contact_address.down,
-    name: '20261009_032253_add_structured_contact_address'
+    name: '20261009_032253_add_structured_contact_address',
+  },
+  {
+    up: migration_20261009_220722.up,
+    down: migration_20261009_220722.down,
+    name: '20261009_220722'
   },
 ];
