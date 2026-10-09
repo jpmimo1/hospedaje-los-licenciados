@@ -41,6 +41,50 @@ export const ContactSettings: GlobalConfig = {
       localized: true,
     },
     {
+      name: "structuredAddress",
+      type: "group",
+      label: "Dirección estructurada",
+      localized: false,
+      required: false,
+      fields: [
+        {
+          name: "streetAddress",
+          type: "text",
+          label: "Dirección de calle",
+          localized: false,
+          required: false,
+        },
+        {
+          name: "addressLocality",
+          type: "text",
+          label: "Localidad / distrito",
+          localized: false,
+          required: false,
+        },
+        {
+          name: "addressRegion",
+          type: "text",
+          label: "Región",
+          localized: false,
+          required: false,
+        },
+        {
+          name: "postalCode",
+          type: "text",
+          label: "Código postal",
+          localized: false,
+          required: false,
+        },
+        {
+          name: "addressCountry",
+          type: "text",
+          label: "Código de país de dos letras",
+          localized: false,
+          required: false,
+        },
+      ],
+    },
+    {
       type: "collapsible",
       label: "Coordenadas del Mapa (Google Maps)",
       admin: {

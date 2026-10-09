@@ -89,3 +89,74 @@ test("empty optional fields remain absent and never introduce postal address com
   assert.deepEqual(Object.keys(result), ["@context", "@type", "@id", "name", "url"]);
   assert.equal(result.address, undefined);
 });
+
+const structuredAddress = {
+  streetAddress: "Calle de prueba 123",
+  addressLocality: "San Sebastián",
+  addressRegion: "Cusco",
+  addressCountry: "PE",
+};
+
+test("complete structured addresses normalize spaces and country code without changing CMS data", () => {
+  const contactSettings = {
+    address: "Dirección visible del CMS",
+    structuredAddress: {
+      streetAddress: "  Calle\t de prueba   123 ",
+      addressLocality: " San   Sebastián ",
+      addressRegion: " Cusco\n",
+      addressCountry: " pe ",
+    },
+  };
+  const original = structuredClone(contactSettings);
+  assert.deepEqual(buildLodgingJsonLd({ ...input, contactSettings }).address, {
+    "@type": "PostalAddress", ...structuredAddress,
+  });
+  assert.deepEqual(contactSettings, original);
+});
+
+test("postal codes remain text with leading zeros, and empty optional codes are omitted", () => {
+  for (const postalCode of ["08000", " 08000 "]) {
+    assert.deepEqual(buildLodgingJsonLd({ ...input, contactSettings: {
+      structuredAddress: { ...structuredAddress, postalCode },
+    } }).address, { "@type": "PostalAddress", ...structuredAddress, postalCode: "08000" });
+  }
+  for (const postalCode of [undefined, null, "", "   "]) {
+    assert.deepEqual(buildLodgingJsonLd({ ...input, contactSettings: {
+      structuredAddress: { ...structuredAddress, postalCode },
+    } }).address, { "@type": "PostalAddress", ...structuredAddress });
+  }
+});
+
+test("incomplete structured addresses keep the text fallback without inferring missing components", () => {
+  const address = "  Dirección localizada, San Sebastián, Cusco, PE  ";
+  for (const key of Object.keys(structuredAddress) as (keyof typeof structuredAddress)[]) {
+    for (const value of [undefined, null, "", " \t "]) {
+      const partial = { ...structuredAddress, [key]: value };
+      assert.equal(buildLodgingJsonLd({ ...input, contactSettings: {
+        address, structuredAddress: partial,
+      } }).address, address.trim(), `${key}: ${value}`);
+      assert.equal(buildLodgingJsonLd({ ...input, contactSettings: {
+        structuredAddress: partial,
+      } }).address, undefined);
+    }
+  }
+  for (const partial of [undefined, null, {}]) {
+    // Exercise a null group at runtime even though generated types omit it.
+    const contactSettings = { address, structuredAddress: partial } as unknown as LodgingJsonLdInput["contactSettings"];
+    assert.equal(buildLodgingJsonLd({ ...input, contactSettings }).address, address.trim());
+  }
+});
+
+test("invalid country formats and non-text address components use the existing text fallback", () => {
+  for (const addressCountry of ["Perú", "P", "PER", "P1", "P E", "🇵🇪"]) {
+    assert.equal(buildLodgingJsonLd({ ...input, contactSettings: {
+      ...input.contactSettings, structuredAddress: { ...structuredAddress, addressCountry },
+    } }).address, input.contactSettings.address);
+  }
+  for (const key of Object.keys(structuredAddress) as (keyof typeof structuredAddress)[]) {
+    const contactSettings = {
+      ...input.contactSettings, structuredAddress: { ...structuredAddress, [key]: 123 },
+    } as unknown as LodgingJsonLdInput["contactSettings"];
+    assert.equal(buildLodgingJsonLd({ ...input, contactSettings }).address, input.contactSettings.address);
+  }
+});

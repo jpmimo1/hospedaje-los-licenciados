@@ -7,8 +7,17 @@ export type LodgingJsonLdInput = {
   locale: Locales;
   siteContent: Partial<Pick<SiteContent, "heroImage">>;
   contactSettings: Partial<Pick<ContactSetting,
-    "phone" | "address" | "latitude" | "longitude" | "checkInTime" | "checkOutTime"
+    "phone" | "address" | "structuredAddress" | "latitude" | "longitude" | "checkInTime" | "checkOutTime"
   >>;
+};
+
+type PostalAddressData = {
+  "@type": "PostalAddress";
+  streetAddress: string;
+  addressLocality: string;
+  addressRegion: string;
+  addressCountry: string;
+  postalCode?: string;
 };
 
 type LodgingData = {
@@ -18,12 +27,32 @@ type LodgingData = {
   name: string;
   url: string;
   telephone?: string;
-  address?: string;
+  address?: string | PostalAddressData;
   geo?: { "@type": "GeoCoordinates"; latitude: number; longitude: number };
   image?: string;
   checkinTime?: string;
   checkoutTime?: string;
 };
+
+function normalizeAddressText(value: unknown) {
+  return typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
+}
+
+function postalAddress(value: ContactSetting["structuredAddress"]): PostalAddressData | undefined {
+  if (!value || typeof value !== "object") return;
+  const streetAddress = normalizeAddressText(value.streetAddress);
+  const addressLocality = normalizeAddressText(value.addressLocality);
+  const addressRegion = normalizeAddressText(value.addressRegion);
+  const addressCountry = normalizeAddressText(value.addressCountry).toUpperCase();
+  // Address components remain free text; the country must be a two-letter code.
+  if (!streetAddress || !addressLocality || !addressRegion || !/^[A-Z]{2}$/.test(addressCountry)) return;
+  const address: PostalAddressData = {
+    "@type": "PostalAddress", streetAddress, addressLocality, addressRegion, addressCountry,
+  };
+  const postalCode = normalizeAddressText(value.postalCode);
+  if (postalCode) address.postalCode = postalCode;
+  return address;
+}
 
 function internationalPhone(value: unknown) {
   if (typeof value !== "string" || !/^\+?[\d\s()-]+$/.test(value.trim())) return;
@@ -72,7 +101,9 @@ export function buildLodgingJsonLd({
   const telephone = internationalPhone(contactSettings.phone);
   if (telephone) data.telephone = telephone;
   const address = typeof contactSettings.address === "string" ? contactSettings.address.trim() : "";
-  if (address) data.address = address;
+  const structuredAddress = postalAddress(contactSettings.structuredAddress);
+  if (structuredAddress) data.address = structuredAddress;
+  else if (address) data.address = address;
 
   const { latitude, longitude } = contactSettings;
   if (typeof latitude === "number" && Number.isFinite(latitude) && latitude >= -90 && latitude <= 90 &&
